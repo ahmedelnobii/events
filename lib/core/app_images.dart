@@ -12,4 +12,5 @@ class AppImages {
   static const onboardingFrame1 = 'assets/images/onboarding_frame1.png';
   static const onboardingFrame2 = 'assets/images/onboarding_frame2.png';
   static const onboardingFrame3 = 'assets/images/onboarding_frame3.png';
+  static const lightLogo = 'assets/images/evently_logo_light.png';
 }

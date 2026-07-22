@@ -2,15 +2,20 @@ import 'package:events/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  ThemeData lightTheme = ThemeData(
+  static ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.lightBackground,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.lightPrimiary,
         foregroundColor: AppColors.lightInputField,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(8),
+        ),
       ),
     ),
     appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.lightBackground,
+      surfaceTintColor: AppColors.lightBackground,
       centerTitle: true,
       titleTextStyle: TextStyle(
         fontSize: 18,
