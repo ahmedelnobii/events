@@ -32,7 +32,12 @@ class AppTheme {
       splashColor: AppColors.lightPrimiary,
       backgroundColor: AppColors.lightPrimiary,
       foregroundColor: AppColors.lightInputField,
-      shape: CircleBorder(side: BorderSide(style: BorderStyle.solid)),
+      shape: CircleBorder(
+        side: BorderSide(
+          color: AppColors.lightOutLinePorder,
+          style: BorderStyle.solid,
+        ),
+      ),
     ),
   );
 }
