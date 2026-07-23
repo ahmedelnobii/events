@@ -1,5 +1,6 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/widgets/language_botton_item.dart';
 import 'package:events/screens/onboarding/widgets/theme_bottom_item.dart';
 import 'package:flutter/material.dart';
@@ -155,7 +156,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
               SizedBox(height: 16.h),
               ElevatedButton(
                 onPressed: () {
-                  
+                  Navigator.of(context).pushReplacementNamed(OnboardingScreen.routName);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.all(8),
