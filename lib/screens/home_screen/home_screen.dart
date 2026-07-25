@@ -1,7 +1,7 @@
 import 'package:events/core/constants/app_icons.dart';
-import 'package:events/screens/home_screen/taps/favorite_tap.dart';
-import 'package:events/screens/home_screen/taps/home_tap.dart';
-import 'package:events/screens/home_screen/taps/profile_tap.dart';
+import 'package:events/screens/home_screen/taps/favorite/favorite_tap.dart';
+import 'package:events/screens/home_screen/taps/home/home_tap.dart';
+import 'package:events/screens/home_screen/taps/profile/profile_tap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,18 +28,42 @@ class _HomeScreenState extends State<HomeScreen> {
         items: [
           BottomNavigationBarItem(
             label: 'Home',
-            activeIcon: SvgPicture.asset(AppIcons.selectedHome),
-            icon: SvgPicture.asset(AppIcons.unSelectedHome),
+            activeIcon: SvgPicture.asset(
+              AppIcons.selectedHome,
+              height: 24,
+              width: 24,
+            ),
+            icon: SvgPicture.asset(
+              AppIcons.unSelectedHome,
+              height: 24,
+              width: 24,
+            ),
           ),
           BottomNavigationBarItem(
             label: 'Favorite',
-            activeIcon: SvgPicture.asset(AppIcons.selectedFavorite),
-            icon: SvgPicture.asset(AppIcons.unSelectedFavorite),
+            activeIcon: SvgPicture.asset(
+              AppIcons.selectedFavorite,
+              height: 24,
+              width: 24,
+            ),
+            icon: SvgPicture.asset(
+              AppIcons.unSelectedFavorite,
+              height: 24,
+              width: 24,
+            ),
           ),
           BottomNavigationBarItem(
             label: 'profile',
-            activeIcon: SvgPicture.asset(AppIcons.selectedProfile),
-            icon: SvgPicture.asset(AppIcons.unSelectedProfile),
+            activeIcon: SvgPicture.asset(
+              AppIcons.selectedProfile,
+              height: 24,
+              width: 24,
+            ),
+            icon: SvgPicture.asset(
+              AppIcons.unSelectedProfile,
+              height: 24,
+              width: 24,
+            ),
           ),
         ],
       ),

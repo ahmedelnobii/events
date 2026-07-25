@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
+    primaryColor: AppColors.lightPrimiary,
     scaffoldBackgroundColor: AppColors.lightBackground,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -37,6 +38,24 @@ class AppTheme {
           color: AppColors.lightOutLinePorder,
           style: BorderStyle.solid,
         ),
+      ),
+    ),
+
+    textTheme: TextTheme(
+      titleSmall: TextStyle(
+        fontSize: 14,
+        fontWeight: .w400,
+        color: AppColors.lightSecText,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 16,
+        fontWeight: .w400,
+        color: AppColors.lightMainText,
+      ),
+      labelSmall: TextStyle(
+        fontSize: 20,
+        fontWeight: .w500,
+        color: AppColors.lightMainText,
       ),
     ),
   );

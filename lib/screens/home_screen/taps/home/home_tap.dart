@@ -1,3 +1,4 @@
+import 'package:events/screens/home_screen/taps/home/home_header.dart';
 import 'package:flutter/material.dart';
 
 class HomeTap extends StatelessWidget {
@@ -5,6 +6,6 @@ class HomeTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('HomeTap'));
+    return Column(children: [HomeHeader()]);
   }
 }
