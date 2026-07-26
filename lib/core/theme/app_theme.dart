@@ -35,8 +35,7 @@ class AppTheme {
       foregroundColor: AppColors.lightInputField,
       shape: CircleBorder(
         side: BorderSide(
-          color: AppColors.lightOutLinePorder,
-          style: BorderStyle.solid,
+          style: BorderStyle.none,
         ),
       ),
     ),
