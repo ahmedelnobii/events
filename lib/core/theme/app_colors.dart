@@ -9,6 +9,7 @@ class AppColors {
   static const Color lightInputField = Color(0xFFFfffff);
   static const Color lightOutLinePorder = Color(0xFFF0F0F0);
   static const Color lightHintText = Color(0xFF7b7b7b);
+  static const Color lightSoftGrey = Color(0xFFE9EAEB);
   // shared between
   static const Color red = Color(0xFFFF3232);
   static const Color gray = Color(0xFFB9B9B9);

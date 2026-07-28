@@ -5,4 +5,5 @@ class AppIcons {
   static const unSelectedHome = 'assets/icons/home-unselected.svg';
   static const unSelectedFavorite = 'assets/icons/fav-unselected.svg';
   static const unSelectedProfile = 'assets/icons/profile_unselected.svg';
+  static const exite = 'assets/icons/Exite.svg';
 }
