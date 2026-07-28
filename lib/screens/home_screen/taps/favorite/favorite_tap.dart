@@ -19,6 +19,7 @@ class FavoriteTap extends StatelessWidget {
           ),
           Expanded(
             child: ListView.separated(
+              physics: BouncingScrollPhysics(),
               separatorBuilder: (context, index) => SizedBox(height: 16),
               itemCount: 10,
               itemBuilder: (_, _) => EventItem(),

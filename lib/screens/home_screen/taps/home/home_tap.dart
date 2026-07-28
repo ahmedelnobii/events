@@ -17,6 +17,7 @@ class _HomeTapState extends State<HomeTap> {
         HomeHeader(),
         Expanded(
           child: ListView.separated(
+            physics: BouncingScrollPhysics(),
             separatorBuilder: (context, index) => SizedBox(height: 16),
             itemCount: 10,
             itemBuilder: (_, _) => EventItem(),
