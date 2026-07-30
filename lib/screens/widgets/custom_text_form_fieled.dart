@@ -8,16 +8,19 @@ class CustomTextFormField extends StatelessWidget {
   Icon? prefix;
   Color? prefixColor;
   Color? suffixColor;
+  int maxLines;
   CustomTextFormField({
     required this.hint,
     this.suffix,
     this.prefix,
     this.suffixColor,
     this.prefixColor,
+    this.maxLines = 1,
   });
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: maxLines,
       onTapOutside: (_) {
         FocusManager.instance.primaryFocus?.unfocus();
       },

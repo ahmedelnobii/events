@@ -1,4 +1,5 @@
 import 'package:events/core/constants/app_icons.dart';
+import 'package:events/screens/home_screen/add_event_screen.dart';
 import 'package:events/screens/home_screen/taps/favorite/favorite_tap.dart';
 import 'package:events/screens/home_screen/taps/home/home_tap.dart';
 import 'package:events/screens/home_screen/taps/profile/profile_tap.dart';
@@ -68,7 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddEventScreen.routeName);
+        },
         child: Icon(Icons.add),
       ),
     );
