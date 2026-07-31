@@ -2,6 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:events/core/theme/app_theme.dart';
 import 'package:events/screens/home_screen/add_event_screen.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
+import 'package:events/screens/login/login_screen.dart';
+import 'package:events/screens/login/register_screen.dart';
 import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/personlization_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
@@ -33,11 +35,14 @@ class Events extends StatelessWidget {
           AddEventScreen.routeName: (context) => AddEventScreen(),
           PersonlizationScreen.routeName: (context) => PersonlizationScreen(),
           OnboardingScreen.routName: (context) => OnboardingScreen(),
+          LoginScreen.routeName: (context) => LoginScreen(),
+          RegisterScreen.routeName: (context) => RegisterScreen(),
         },
-        initialRoute: OnboardingPageDetails.isOnboardingSeen
-            ? HomeScreen.routeName
-            : PersonlizationScreen.routeName,
+        // initialRoute: OnboardingPageDetails.isOnboardingSeen
+        //     ? HomeScreen.routeName
+        //     : PersonlizationScreen.routeName,
         theme: AppTheme.lightTheme,
+        home: LoginScreen(),
       ),
     );
   }

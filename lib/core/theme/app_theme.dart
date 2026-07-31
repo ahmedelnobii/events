@@ -56,6 +56,11 @@ class AppTheme {
         fontWeight: .w500,
         color: AppColors.lightMainText,
       ),
+      labelLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: .w600,
+        color: AppColors.lightPrimiary,
+      ),
     ),
   );
 }

@@ -6,4 +6,6 @@ class AppIcons {
   static const unSelectedFavorite = 'assets/icons/fav-unselected.svg';
   static const unSelectedProfile = 'assets/icons/profile_unselected.svg';
   static const exite = 'assets/icons/Exite.svg';
+  static const email = 'assets/icons/email.svg';
+  static const lock = 'assets/icons/lock.svg';
 }

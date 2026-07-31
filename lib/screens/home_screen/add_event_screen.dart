@@ -209,7 +209,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
             ),
             SizedBox(height: 16),
-            CustomButton(text: 'Add Event', onPressed: () {}),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: CustomButton(text: 'Add Event', onPressed: () {}),
+            ),
           ],
         ),
       ),
