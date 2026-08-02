@@ -13,6 +13,10 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  var emailController = TextEditingController();
+
+  var passwordController = TextEditingController();
+  var nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   children: [
                     CustomTextFormField(
+                      controller: nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Enter your name';
@@ -55,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(height: 16),
 
                     CustomTextFormField(
+                      controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'please enter email';
@@ -78,6 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(height: 16),
 
                     CustomTextFormField(
+                      controller: passwordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Enter password';
