@@ -8,4 +8,6 @@ class AppIcons {
   static const exite = 'assets/icons/Exite.svg';
   static const email = 'assets/icons/email.svg';
   static const lock = 'assets/icons/lock.svg';
+  static const eventDate = 'assets/icons/calendar-add.svg';
+  static const eventTime = 'assets/icons/time-add.svg';
 }

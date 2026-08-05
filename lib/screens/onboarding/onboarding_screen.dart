@@ -65,13 +65,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: AppColors.lightInputField,
-                  foregroundColor: AppColors.lightPrimiary,
+                  foregroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: AppColors.lightOutLinePorder),
                     borderRadius: BorderRadiusGeometry.circular(18),
                   ),
                 ),
-                child: Text('skip'),
+                child: Text('skip', style: TextStyle(fontSize: 18)),
               ),
             ),
         ],

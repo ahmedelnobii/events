@@ -29,7 +29,7 @@ class _LanguageBottonItemState extends State<LanguageBottonItem> {
               foregroundColor: AppColors.lightMainText,
             )
           : Theme.of(context).elevatedButtonTheme.style,
-      child: Text(widget.language),
+      child: Text(widget.language, style: TextStyle(fontSize: 16)),
     );
   }
 }

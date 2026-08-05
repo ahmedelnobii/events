@@ -7,6 +7,7 @@ import 'package:events/screens/login/register_screen.dart';
 import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/personlization_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -38,11 +39,10 @@ class Events extends StatelessWidget {
           LoginScreen.routeName: (context) => LoginScreen(),
           RegisterScreen.routeName: (context) => RegisterScreen(),
         },
-        // initialRoute: OnboardingPageDetails.isOnboardingSeen
-        //     ? HomeScreen.routeName
-        //     : PersonlizationScreen.routeName,
+        initialRoute: OnboardingPageDetails.isOnboardingSeen
+            ? HomeScreen.routeName
+            : PersonlizationScreen.routeName,
         theme: AppTheme.lightTheme,
-        home: LoginScreen(),
       ),
     );
   }
