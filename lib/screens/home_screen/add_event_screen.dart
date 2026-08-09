@@ -4,11 +4,14 @@ import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/category_model.dart';
+import 'package:events/model/event_model.dart';
 import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
+import 'package:events/screens/widgets/firebase_servises.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -24,12 +27,17 @@ class _AddEventScreenState extends State<AddEventScreen> {
   late Time _time;
   var _dateTime;
   var _dayDate;
+  DateTime? dateTime;
+  DateTime? dayDate;
   void onTimeChanged(Time newTime) {
     setState(() {
       _time = newTime;
     });
   }
 
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -98,152 +106,203 @@ class _AddEventScreenState extends State<AddEventScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: .start,
-                      children: [Text('Title', style: textTheme.titleMedium)],
-                    ),
-                    SizedBox(height: 5),
-                    CustomTextFormField(hint: 'Event Title'),
-                    SizedBox(height: 5),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: .start,
+                        children: [Text('Title', style: textTheme.titleMedium)],
+                      ),
+                      SizedBox(height: 5),
+                      CustomTextFormField(
+                        hint: 'Event Title',
+                        controller: titleController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'title can not be empty';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 5),
 
-                    Row(
-                      mainAxisAlignment: .start,
-                      children: [
-                        Text('Description', style: textTheme.titleMedium),
-                      ],
-                    ),
-                    SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: .start,
+                        children: [
+                          Text('Description', style: textTheme.titleMedium),
+                        ],
+                      ),
+                      SizedBox(height: 5),
 
-                    CustomTextFormField(
-                      hint: 'Event Description....',
-                      maxLines: 5,
-                    ),
-                    SizedBox(height: 16),
+                      CustomTextFormField(
+                        hint: 'Event Description....',
+                        maxLines: 5,
+                        controller: descriptionController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Description can not be empty';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 16),
 
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              AppIcons.eventDate,
-                              height: 24,
-                              width: 24,
-                              fit: .scaleDown,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryColor,
-                                .srcIn,
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text('Event Date'),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            _dayDate = await DatePicker.showSimpleDatePicker(
-                              context,
-                              backgroundColor: Theme.of(context).primaryColor,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime.now().add(Duration(days: 365)),
-                              looping: false,
-                              dateFormat: "dd-MMM-yyyy",
-                              pickerMode: DateTimePickerMode.date,
-                              textColor: AppColors.lightInputField,
-                            );
-                            _dayDate = DateFormat(
-                              'dd/MM/yyyy',
-                            ).format(_dayDate);
-                            setState(() {});
-                          },
-                          child: Text(
-                            _dayDate == null ? 'choose date' : "$_dayDate",
-                            style: textTheme.titleSmall!.copyWith(
-                              color: Theme.of(context).primaryColor,
-                              decoration: .underline,
-                              fontWeight: .w400,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: .spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              AppIcons.eventTime,
-                              height: 24,
-                              width: 24,
-                              fit: .scaleDown,
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryColor,
-                                .srcIn,
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text('Event Time'),
-                          ],
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _time = Time(
-                              hour: DateTime.now().hour,
-                              minute: DateTime.now().minute,
-                              second: DateTime.now().second,
-                            );
-                            Navigator.of(context).push(
-                              showPicker(
-                                showSecondSelector: false,
-                                context: context,
-                                value: _time,
-                                onChange: onTimeChanged,
-                                okStyle: TextStyle(
-                                  color: Theme.of(context).primaryColor,
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                AppIcons.eventDate,
+                                height: 24,
+                                width: 24,
+                                fit: .scaleDown,
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).primaryColor,
+                                  .srcIn,
                                 ),
-                                cancelStyle: TextStyle(color: AppColors.red),
-                                blurredBackground: true,
-                                accentColor: Theme.of(context).primaryColor,
-                                minuteInterval: TimePickerInterval.FIVE,
-                                // Optional onChange to receive value as DateTime
-                                onChangeDateTime: (DateTime dateTime) {
-                                  // print(dateTime);
-                                  //debugPrint("[debug datetime]:  $dateTime");
-                                  _dateTime = DateFormat(
-                                    'hh:mm a',
-                                  ).format(dateTime);
-                                  setState(() {});
-                                },
                               ),
-                            );
-                          },
-                          child: Text(
-                            _dateTime == null ? 'choose time' : '$_dateTime',
-                            style: textTheme.titleSmall!.copyWith(
-                              color: Theme.of(context).primaryColor,
-                              decoration: .underline,
-                              fontWeight: .w400,
+                              SizedBox(width: 5),
+                              Text('Event Date'),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              dayDate = await DatePicker.showSimpleDatePicker(
+                                context,
+                                backgroundColor: Theme.of(context).primaryColor,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime.now().add(
+                                  Duration(days: 365),
+                                ),
+                                looping: false,
+                                dateFormat: "dd-MMM-yyyy",
+                                pickerMode: DateTimePickerMode.date,
+                                textColor: AppColors.lightInputField,
+                              );
+                              _dayDate = DateFormat(
+                                'dd/MM/yyyy',
+                              ).format(dayDate!);
+                              setState(() {});
+                            },
+                            child: Text(
+                              _dayDate == null ? 'choose date' : "$_dayDate",
+                              style: textTheme.titleSmall!.copyWith(
+                                color: Theme.of(context).primaryColor,
+                                decoration: .underline,
+                                fontWeight: .w400,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                AppIcons.eventTime,
+                                height: 24,
+                                width: 24,
+                                fit: .scaleDown,
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).primaryColor,
+                                  .srcIn,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text('Event Time'),
+                            ],
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _time = Time(
+                                hour: DateTime.now().hour,
+                                minute: DateTime.now().minute,
+                                second: DateTime.now().second,
+                              );
+                              Navigator.of(context).push(
+                                showPicker(
+                                  showSecondSelector: false,
+                                  context: context,
+                                  value: _time,
+                                  onChange: onTimeChanged,
+                                  okStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  cancelStyle: TextStyle(color: AppColors.red),
+                                  blurredBackground: true,
+                                  accentColor: Theme.of(context).primaryColor,
+                                  minuteInterval: TimePickerInterval.FIVE,
+                                  // Optional onChange to receive value as DateTime
+                                  onChangeDateTime: (DateTime dateTime) {
+                                    // print(dateTime);
+                                    //debugPrint("[debug datetime]:  $dateTime");
+                                    this.dateTime = dateTime;
+                                    _dateTime = DateFormat(
+                                      'hh:mm a',
+                                    ).format(dateTime);
+                                    setState(() {});
+                                  },
+                                ),
+                              );
+                            },
+                            child: Text(
+                              _dateTime == null ? 'choose time' : '$_dateTime',
+                              style: textTheme.titleSmall!.copyWith(
+                                color: Theme.of(context).primaryColor,
+                                decoration: .underline,
+                                fontWeight: .w400,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomButton(text: 'Add Event', onPressed: () {}),
+                child: CustomButton(
+                  text: 'Add Event',
+                  onPressed: () {
+                    onAddEvent() ? Navigator.of(context).pop() : null;
+                  },
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  bool onAddEvent() {
+    if (formKey.currentState!.validate() &&
+        this.dateTime != null &&
+        dayDate != null) {
+      DateTime myDateTime = DateTime(
+        dayDate!.year,
+        dayDate!.month,
+        dayDate!.day,
+        this.dateTime!.hour,
+        this.dateTime!.minute,
+      );
+      EventModel event = EventModel(
+        categoryModel: CategoryModel.categories[currentIndex],
+        description: descriptionController.text,
+        title: titleController.text,
+        dateTime: myDateTime,
+      );
+      FirebaseServices.creatEvent(event);
+      return true;
+    }
+
+    return false;
   }
 }
