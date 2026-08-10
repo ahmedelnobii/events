@@ -17,4 +17,11 @@ class FirebaseServices {
     event.id = doc.id;
     doc.set(event);
   }
+  static Future<List<EventModel>> getEvent() async {
+    CollectionReference<EventModel> eventCollection = getEventsCollection();
+    QuerySnapshot<EventModel> querySnapshot = await eventCollection
+        .orderBy('dateTime')
+        .get();
+    return querySnapshot.docs.map((snapShot) => snapShot.data()).toList();
+  }
 }
