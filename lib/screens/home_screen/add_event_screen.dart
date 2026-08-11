@@ -9,6 +9,7 @@ import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
+import 'package:events/screens/widgets/ui_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -268,12 +269,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomButton(
-                  text: 'Add Event',
-                  onPressed: () {
-                    onAddEvent() ? Navigator.of(context).pop() : null;
-                  },
-                ),
+                child: CustomButton(text: 'Add Event', onPressed: onAddEvent),
               ),
             ],
           ),
@@ -282,7 +278,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  bool onAddEvent() {
+  void onAddEvent() {
     if (formKey.currentState!.validate() &&
         this.dateTime != null &&
         dayDate != null) {
@@ -299,10 +295,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
         title: titleController.text,
         dateTime: myDateTime,
       );
-      FirebaseServices.creatEvent(event);
-      return true;
+      FirebaseServices.creatEvent(event)
+          .then((_) {
+            Navigator.of(context).pop();
+            UiUtils.showSuccsesMessage('event created successfully');
+          })
+          .catchError((_) {
+            UiUtils.showFailedMessage('Failed to create event');
+          });
     }
-
-    return false;
   }
 }
