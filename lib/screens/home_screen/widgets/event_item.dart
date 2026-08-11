@@ -1,25 +1,25 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/model/event_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class EventItem extends StatefulWidget {
-  @override
-  State<EventItem> createState() => _EventItemState();
-}
-
-class _EventItemState extends State<EventItem> {
+class EventItem extends StatelessWidget {
   bool liked = false;
+  EventModel event;
+  EventItem(this.event);
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
     return Stack(
       children: [
         Image.asset(
-          AppImages.lightSport,
-          height: screenHeight * .23,
+          event.categoryModel.image,
+          height: screenHeight * .25,
           width: double.infinity,
-          fit: .cover,
+          fit: .contain,
         ),
         Positioned(
           top: 8,
@@ -32,7 +32,7 @@ class _EventItemState extends State<EventItem> {
             ),
 
             child: Text(
-              '13 Jul',
+              DateFormat('dd MMM').format(event.dateTime),
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: Theme.of(context).primaryColor,
                 fontWeight: .w600,
@@ -56,17 +56,13 @@ class _EventItemState extends State<EventItem> {
                       color: AppColors.lightMainText,
                       fontWeight: .w400,
                     ),
-                    'Meeting for Updating The Development Method Meeting for Updating The Development MethodMeeting for Updating The Development MethodMeeting for Updating The Development Method',
+                    event.description,
                     maxLines: 2,
                     overflow: .ellipsis,
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    setState(() {
-                      liked = !liked;
-                    });
-                  },
+                  onPressed: () {},
                   icon: liked
                       ? Icon(
                           CupertinoIcons.heart_fill,

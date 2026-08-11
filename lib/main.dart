@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:events/core/theme/app_theme.dart';
+import 'package:events/providers/event_provider.dart';
 import 'package:events/screens/home_screen/add_event_screen.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/login/login_screen.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,12 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await OnboardingPageDetails.getSheredPrefrences();
-  runApp(DevicePreview(enabled: !kReleaseMode, builder: (context) => Events()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => EventProvider(),
+      child: Events(),
+    ),
+  );
 }
 
 class Events extends StatelessWidget {

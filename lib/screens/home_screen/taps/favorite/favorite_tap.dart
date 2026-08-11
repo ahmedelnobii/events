@@ -17,14 +17,6 @@ class FavoriteTap extends StatelessWidget {
               suffixColor: Theme.of(context).primaryColor,
             ),
           ),
-          Expanded(
-            child: ListView.separated(
-              physics: BouncingScrollPhysics(),
-              separatorBuilder: (context, index) => SizedBox(height: 16),
-              itemCount: 10,
-              itemBuilder: (_, _) => EventItem(),
-            ),
-          ),
         ],
       ),
     );

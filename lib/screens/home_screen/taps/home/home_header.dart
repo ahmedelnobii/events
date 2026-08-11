@@ -1,7 +1,10 @@
 import 'package:events/model/category_model.dart';
+import 'package:events/model/event_model.dart';
+import 'package:events/providers/event_provider.dart';
 import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeHeader extends StatefulWidget {
   @override
@@ -46,6 +49,11 @@ class _HomeHeaderState extends State<HomeHeader> {
               onTap: (value) {
                 if (value == currentIndex) return;
                 currentIndex = value;
+                Provider.of<EventProvider>(context, listen: false).filterEvents(
+                  currentIndex == 0
+                      ? null
+                      : CategoryModel.categories[currentIndex - 1],
+                );
                 setState(() {});
               },
               tabs: [
