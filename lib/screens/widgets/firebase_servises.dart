@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:events/model/event_model.dart';
+import 'package:events/model/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -37,5 +39,44 @@ class FirebaseServices {
     CollectionReference<EventModel> eventCollection = getEventsCollection();
     DocumentReference<EventModel> doc = eventCollection.doc(event.id);
     return doc.update(event.toJson());
+  }
+
+  static CollectionReference<UserModel> getUsersCollection() =>
+      FirebaseFirestore.instance
+          .collection('Users')
+          .withConverter<UserModel>(
+            fromFirestore: (snapShot, _) =>
+                UserModel.fromJson(snapShot.data()!),
+            toFirestore: (user, _) => user.toJson(),
+          );
+  static Future<UserModel?> login({
+    required String email,
+    required String password,
+  }) async {
+    CollectionReference<UserModel> collection = getUsersCollection();
+    var credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    DocumentReference<UserModel> doc = collection.doc(credential.user!.uid);
+    DocumentSnapshot<UserModel> snapShot = await doc.get();
+    return snapShot.data();
+  }
+
+  static Future<UserModel> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    UserCredential credential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    UserModel user = UserModel(
+      name: name,
+      email: email,
+      id: credential.user!.uid,
+    );
+    CollectionReference<UserModel> collection = getUsersCollection();
+    await collection.doc(user.id).set(user);
+    return user;
   }
 }

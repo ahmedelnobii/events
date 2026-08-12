@@ -1,10 +1,16 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
+import 'package:events/providers/user_provider.dart';
+import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/login/register_screen.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
+import 'package:events/screens/widgets/firebase_servises.dart';
+import 'package:events/screens/widgets/ui_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
@@ -108,7 +114,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        print(" log in ");
+                        FirebaseServices.login(
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )
+                            .then((user) {
+                              Navigator.of(
+                                context,
+                              ).pushReplacementNamed(HomeScreen.routeName);
+
+                              Provider.of<UserProvider>(
+                                context,
+                                listen: false,
+                              ).updateUser(user);
+                            })
+                            .catchError((error) {
+                              if (error is FirebaseAuthException) {
+                                UiUtils.showFailedMessage(error.message);
+                              }
+                            });
                       }
                     },
                     text: 'Log in',

@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:events/core/theme/app_theme.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/add_event_screen.dart';
 import 'package:events/screens/home_screen/edit_screen.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
@@ -11,6 +12,7 @@ import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/personlization_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,8 +27,11 @@ void main() async {
   ]);
   await OnboardingPageDetails.getSheredPrefrences();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => EventProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => EventProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+      ],
       child: Events(),
     ),
   );
@@ -53,7 +58,7 @@ class Events extends StatelessWidget {
         // initialRoute: OnboardingPageDetails.isOnboardingSeen
         //     ? HomeScreen.routeName
         //     : PersonlizationScreen.routeName,
-        theme: AppTheme.lightTheme,
+        // theme: AppTheme.lightTheme,
       ),
     );
   }

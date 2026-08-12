@@ -1,6 +1,8 @@
 import 'package:events/model/category_model.dart';
 import 'package:events/model/event_model.dart';
+import 'package:events/model/user_model.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,8 @@ class _HomeHeaderState extends State<HomeHeader> {
 
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserProvider>(context).user!;
+
     return SafeArea(
       child: Column(
         crossAxisAlignment: .start,
@@ -31,7 +35,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'ahmed elnoby',
+                  user.name,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],

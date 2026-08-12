@@ -1,12 +1,17 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/language_model.dart';
+import 'package:events/model/user_model.dart';
+import 'package:events/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class ProfileTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserProvider>(context).user!;
+
     double screenWidth = MediaQuery.sizeOf(context).width;
     TextTheme textTheme = Theme.of(context).textTheme;
     return SafeArea(
@@ -20,9 +25,9 @@ class ProfileTap extends StatelessWidget {
             ),
           ),
 
-          Text('ahmed elnoby', style: textTheme.labelSmall),
+          Text(user.name, style: textTheme.labelSmall),
           SizedBox(height: 5),
-          Text('ahmedellnobi13@gmail.com', style: textTheme.titleSmall),
+          Text(user.email, style: textTheme.titleSmall),
           SizedBox(height: 32),
 
           Padding(

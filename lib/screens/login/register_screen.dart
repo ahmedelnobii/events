@@ -1,9 +1,16 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
+import 'package:events/providers/user_provider.dart';
+import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
+import 'package:events/screens/widgets/firebase_servises.dart';
+import 'package:events/screens/widgets/ui_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/RegisterScreen';
@@ -113,7 +120,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: CustomButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        print('register');
+                        FirebaseServices.register(
+                              name: nameController.text,
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )
+                            .then((user) {
+                              Navigator.of(
+                                context,
+                              ).pushReplacementNamed(HomeScreen.routeName);
+
+                              Provider.of<UserProvider>(
+                                context,
+                                listen: false,
+                              ).updateUser(user);
+                            })
+                            .catchError((error) {
+                              if (error is FirebaseAuthException) {
+                                UiUtils.showFailedMessage(error.message);
+                              }
+                            });
                       }
                     },
                     text: 'Register',

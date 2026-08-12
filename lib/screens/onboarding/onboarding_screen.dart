@@ -1,6 +1,7 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
+import 'package:events/screens/login/login_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_frames_pageview.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_text_page_view.dart';
@@ -125,7 +126,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         setOnBoardingSharedPreferance(),
                         Navigator.of(
                           context,
-                        ).pushReplacementNamed(HomeScreen.routeName),
+                        ).pushReplacementNamed(LoginScreen.routeName),
                       }
                     : textController.nextPage(
                         duration: Duration(milliseconds: 250),
