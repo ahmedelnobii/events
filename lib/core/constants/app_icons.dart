@@ -10,4 +10,6 @@ class AppIcons {
   static const lock = 'assets/icons/lock.svg';
   static const eventDate = 'assets/icons/calendar-add.svg';
   static const eventTime = 'assets/icons/time-add.svg';
+  static const edit = 'assets/icons/edit_icon.svg';
+  static const delete = 'assets/icons/delete.svg';
 }

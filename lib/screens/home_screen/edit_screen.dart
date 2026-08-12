@@ -11,27 +11,26 @@ import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
 import 'package:events/screens/widgets/ui_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AddEventScreen extends StatefulWidget {
-  static const routeName = '/AddEventScreen';
+class EditScreen extends StatefulWidget {
+  static const routeName = '/EditScreen';
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<EditScreen> createState() => _EditScreenState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
+class _EditScreenState extends State<EditScreen> {
+  late EventModel event;
   late Time _time;
-  var _dateTime;
-  var _dayDate;
-  DateTime? dateTime;
-  DateTime? dayDate;
+  late var _dateTime = DateFormat('hh:mm a').format(event.dateTime);
+  late var _dayDate = DateFormat('MMM dd,yyyy').format(event.dateTime);
+  late DateTime? dateTime = event.dateTime;
+  late DateTime? dayDate = event.dateTime;
   void onTimeChanged(Time newTime) {
     setState(() {
       _time = newTime;
@@ -41,14 +40,27 @@ class _AddEventScreenState extends State<AddEventScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  int currentIndex = 0;
+  late int currentIndex = CategoryModel.categories.indexWhere(
+    (category) => category == event.categoryModel,
+  );
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      titleController.text = event.title;
+      descriptionController.text = event.description;
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    event = ModalRoute.of(context)?.settings.arguments as EventModel;
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Add event"),
+        title: Text("Edit event"),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -56,7 +68,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
           icon: Icon(Icons.arrow_back_ios_new),
           style: IconButton.styleFrom(
             backgroundColor: AppColors.lightInputField,
-            foregroundColor: AppColors.lightPrimiary,
+            foregroundColor: Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(
               side: BorderSide(color: AppColors.lightOutLinePorder),
               borderRadius: BorderRadiusGeometry.circular(8),
@@ -190,7 +202,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               setState(() {});
                             },
                             child: Text(
-                              _dayDate == null ? 'choose date' : "$_dayDate",
+                              _dayDate = "$_dayDate",
                               style: textTheme.titleSmall!.copyWith(
                                 color: Theme.of(context).primaryColor,
                                 decoration: .underline,
@@ -254,7 +266,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               );
                             },
                             child: Text(
-                              _dateTime == null ? 'choose time' : '$_dateTime',
+                              _dateTime,
                               style: textTheme.titleSmall!.copyWith(
                                 color: Theme.of(context).primaryColor,
                                 decoration: .underline,
@@ -271,7 +283,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
               SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomButton(text: 'Add Event', onPressed: onAddEvent),
+                child: CustomButton(
+                  text: 'Update Event',
+                  onPressed: onUpdateEvent,
+                ),
               ),
             ],
           ),
@@ -280,7 +295,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
     );
   }
 
-  void onAddEvent() {
+  void onUpdateEvent() {
     if (formKey.currentState!.validate() &&
         this.dateTime != null &&
         dayDate != null) {
@@ -291,21 +306,21 @@ class _AddEventScreenState extends State<AddEventScreen> {
         this.dateTime!.hour,
         this.dateTime!.minute,
       );
-      EventModel event = EventModel(
+      EventModel updatedEvent = EventModel(
+        id: event.id,
         categoryModel: CategoryModel.categories[currentIndex],
         description: descriptionController.text,
         title: titleController.text,
         dateTime: myDateTime,
       );
-      FirebaseServices.creatEvent(event)
+      FirebaseServices.updateEvent(updatedEvent)
           .then((_) {
             Navigator.of(context).pop();
+            UiUtils.showSuccsesMessage('event updated successfully');
             Provider.of<EventProvider>(context, listen: false).getEvents();
-
-            UiUtils.showSuccsesMessage('event created successfully');
           })
           .catchError((_) {
-            UiUtils.showFailedMessage('Failed to create event');
+            UiUtils.showFailedMessage('Failed to updated event');
           });
     }
   }

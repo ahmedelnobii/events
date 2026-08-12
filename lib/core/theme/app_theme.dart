@@ -33,11 +33,7 @@ class AppTheme {
       splashColor: AppColors.lightPrimiary,
       backgroundColor: AppColors.lightPrimiary,
       foregroundColor: AppColors.lightInputField,
-      shape: CircleBorder(
-        side: BorderSide(
-          style: BorderStyle.none,
-        ),
-      ),
+      shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
     ),
 
     textTheme: TextTheme(
@@ -49,6 +45,11 @@ class AppTheme {
       titleMedium: TextStyle(
         fontSize: 16,
         fontWeight: .w400,
+        color: AppColors.lightMainText,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 18,
+        fontWeight: .w500,
         color: AppColors.lightMainText,
       ),
       labelSmall: TextStyle(
