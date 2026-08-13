@@ -2,6 +2,7 @@ import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
+import 'package:events/screens/login/googleButton.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
@@ -168,6 +169,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 48),
+              GoogleButton(text: 'Register with Google'),
             ],
           ),
         ),

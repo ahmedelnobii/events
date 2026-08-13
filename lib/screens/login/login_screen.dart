@@ -2,6 +2,7 @@ import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
+import 'package:events/screens/login/googleButton.dart';
 import 'package:events/screens/login/register_screen.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
@@ -157,6 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 48),
+              GoogleButton(text: 'Login with Google'),
             ],
           ),
         ),

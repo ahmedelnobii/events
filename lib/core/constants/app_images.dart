@@ -19,4 +19,7 @@ class AppImages {
   static const lightBirthday = 'assets/images/birthday.png';
   static const lightExhibition = 'assets/images/exhibition.png';
   static const lightBookClub = 'assets/images/bookclub.png';
+  static const google = 'assets/images/google.png';
+
+
 }

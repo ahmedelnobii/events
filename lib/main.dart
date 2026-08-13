@@ -54,11 +54,11 @@ class Events extends StatelessWidget {
           PreviewScreen.routeName: (context) => PreviewScreen(),
           EditScreen.routeName: (context) => EditScreen(),
         },
-        home: LoginScreen(),
-        // initialRoute: OnboardingPageDetails.isOnboardingSeen
-        //     ? HomeScreen.routeName
-        //     : PersonlizationScreen.routeName,
-        // theme: AppTheme.lightTheme,
+       // home: LoginScreen(),
+        initialRoute: OnboardingPageDetails.isOnboardingSeen
+            ? HomeScreen.routeName
+            : PersonlizationScreen.routeName,
+        theme: AppTheme.lightTheme,
       ),
     );
   }
