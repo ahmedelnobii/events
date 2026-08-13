@@ -74,9 +74,26 @@ class FirebaseServices {
       name: name,
       email: email,
       id: credential.user!.uid,
+      favEventsId: [],
     );
     CollectionReference<UserModel> collection = getUsersCollection();
     await collection.doc(user.id).set(user);
     return user;
+  }
+ // add fav remotly in database 
+  static Future<void> addEventToFavorite(String eventID) {
+    var collection = getUsersCollection();
+    var doc = collection.doc(FirebaseAuth.instance.currentUser!.uid);
+    return doc.update({
+      'favEventsId': FieldValue.arrayUnion([eventID]),
+    });
+  }
+
+  static Future<void> removeEventFromFavorite(String eventID) async {
+    var collection = getUsersCollection();
+    var doc = collection.doc(FirebaseAuth.instance.currentUser!.uid);
+    return doc.update({
+      'favEventsId': FieldValue.arrayRemove([eventID]),
+    });
   }
 }

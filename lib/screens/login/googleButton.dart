@@ -59,9 +59,9 @@ class GoogleButton extends StatelessWidget {
       name: googleSignInAccount.displayName ?? 'user',
       email: googleSignInAccount.email,
       id: userCredential.user!.uid,
+      favEventsId: [],
     );
-    Provider.of<UserProvider>(context, listen: false).updateUser(user);
-    Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+
     if (userCredential.additionalUserInfo!.isNewUser) {
       CollectionReference<UserModel> collection =
           FirebaseServices.getUsersCollection();
@@ -69,6 +69,18 @@ class GoogleButton extends StatelessWidget {
         userCredential.user!.uid,
       );
       doc.set(user);
+      Provider.of<UserProvider>(context, listen: false).updateUser(user);
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+    } else {
+      CollectionReference<UserModel> collection =
+          FirebaseServices.getUsersCollection();
+      DocumentReference<UserModel> doc = collection.doc(
+        userCredential.user!.uid,
+      );
+      DocumentSnapshot<UserModel> userSnapShot = await doc.get();
+      UserModel user = userSnapShot.data()!;
+      Provider.of<UserProvider>(context, listen: false).updateUser(user);
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
     }
   }
 }
