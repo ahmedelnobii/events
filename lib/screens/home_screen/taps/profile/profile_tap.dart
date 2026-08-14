@@ -3,6 +3,9 @@ import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/language_model.dart';
 import 'package:events/model/user_model.dart';
 import 'package:events/providers/user_provider.dart';
+import 'package:events/screens/login/login_screen.dart';
+import 'package:events/screens/widgets/firebase_servises.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +82,15 @@ class ProfileTap extends StatelessWidget {
                   ),
                   tileColor: AppColors.lightInputField,
                   trailing: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      FirebaseServices.logout().then((_) {
+                        Navigator.of(
+                          context,
+                        ).pushReplacementNamed(LoginScreen.routeName).then((_) {
+                          Provider.of<UserProvider>(context).updateUser(null);
+                        });
+                      });
+                    },
                     child: SvgPicture.asset(
                       AppIcons.exite,
                       height: 24,

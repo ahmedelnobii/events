@@ -80,7 +80,8 @@ class FirebaseServices {
     await collection.doc(user.id).set(user);
     return user;
   }
- // add fav remotly in database 
+
+  // add fav remotly in database
   static Future<void> addEventToFavorite(String eventID) {
     var collection = getUsersCollection();
     var doc = collection.doc(FirebaseAuth.instance.currentUser!.uid);
@@ -96,4 +97,6 @@ class FirebaseServices {
       'favEventsId': FieldValue.arrayRemove([eventID]),
     });
   }
+
+  static Future<void> logout() => FirebaseAuth.instance.signOut();
 }
