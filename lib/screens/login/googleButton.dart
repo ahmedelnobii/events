@@ -11,15 +11,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
-class GoogleButton extends StatelessWidget {
+class GoogleButton extends StatefulWidget {
   String text;
   GoogleButton({required this.text});
+
+  @override
+  State<GoogleButton> createState() => _GoogleButtonState();
+}
+
+class _GoogleButtonState extends State<GoogleButton> {
+  bool isPressed = false;
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        onGoogleButtonPressed(context);
-      },
+      onPressed: isPressed
+          ? null
+          : () async {
+              setState(() {
+                isPressed = true;
+              });
+              await onGoogleButtonPressed(context);
+              setState(() {
+                isPressed = false;
+              });
+            },
       style: ElevatedButton.styleFrom(
         foregroundColor: Theme.of(context).primaryColor,
         backgroundColor: AppColors.lightInputField,
@@ -28,21 +43,35 @@ class GoogleButton extends StatelessWidget {
           borderRadius: BorderRadiusGeometry.circular(16.r),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: .center,
-        children: [
-          Image.asset(AppImages.google, height: 24, width: 24, fit: .scaleDown),
-          SizedBox(width: 16),
-          Text(
-            text,
-            style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
-          ),
-        ],
-      ),
+      child: isPressed
+          ? Row(
+              mainAxisAlignment: .center,
+              children: [
+                CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: .center,
+              children: [
+                Image.asset(
+                  AppImages.google,
+                  height: 24,
+                  width: 24,
+                  fit: .scaleDown,
+                ),
+                SizedBox(width: 16),
+                Text(
+                  widget.text,
+                  style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
+                ),
+              ],
+            ),
     );
   }
 
-  void onGoogleButtonPressed(BuildContext context) async {
+  Future<void> onGoogleButtonPressed(BuildContext context) async {
     GoogleSignIn googleSignIn = GoogleSignIn.instance;
     await googleSignIn.initialize(
       serverClientId:
