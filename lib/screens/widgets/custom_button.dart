@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
-  VoidCallback onPressed;
+  VoidCallback? onPressed;
   String text;
   CustomButton({required this.onPressed, required this.text});
   @override

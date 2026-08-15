@@ -5,6 +5,7 @@ import 'package:events/model/user_model.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
+import 'package:events/screens/widgets/ui_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +14,8 @@ import 'package:provider/provider.dart';
 
 class GoogleButton extends StatefulWidget {
   String text;
-  GoogleButton({required this.text});
+  void Function(bool) isloading;
+  GoogleButton({required this.text, required this.isloading});
 
   @override
   State<GoogleButton> createState() => _GoogleButtonState();
@@ -29,13 +31,18 @@ class _GoogleButtonState extends State<GoogleButton> {
           : () async {
               setState(() {
                 isPressed = true;
+                widget.isloading(isPressed);
               });
               await onGoogleButtonPressed(context);
-              setState(() {
-                isPressed = false;
-              });
+              if (mounted) {
+                setState(() {
+                  isPressed = false;
+                  widget.isloading(isPressed);
+                });
+              }
             },
       style: ElevatedButton.styleFrom(
+        surfaceTintColor: AppColors.lightInputField,
         foregroundColor: Theme.of(context).primaryColor,
         backgroundColor: AppColors.lightInputField,
         padding: EdgeInsets.all(8),
@@ -72,44 +79,49 @@ class _GoogleButtonState extends State<GoogleButton> {
   }
 
   Future<void> onGoogleButtonPressed(BuildContext context) async {
-    GoogleSignIn googleSignIn = GoogleSignIn.instance;
-    await googleSignIn.initialize(
-      serverClientId:
-          '122228660273-g9ro7gfuvvbir0c41u4n5uovcqllomfn.apps.googleusercontent.com',
-    );
-    GoogleSignInAccount googleSignInAccount = await googleSignIn.authenticate();
-    OAuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleSignInAccount.authentication.idToken,
-    );
-
-    UserCredential userCredential = await FirebaseAuth.instance
-        .signInWithCredential(credential);
-    UserModel user = UserModel(
-      name: googleSignInAccount.displayName ?? 'user',
-      email: googleSignInAccount.email,
-      id: userCredential.user!.uid,
-      favEventsId: [],
-    );
-
-    if (userCredential.additionalUserInfo!.isNewUser) {
-      CollectionReference<UserModel> collection =
-          FirebaseServices.getUsersCollection();
-      DocumentReference<UserModel> doc = collection.doc(
-        userCredential.user!.uid,
+    try {
+      GoogleSignIn googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize(
+        serverClientId:
+            '122228660273-g9ro7gfuvvbir0c41u4n5uovcqllomfn.apps.googleusercontent.com',
       );
-      doc.set(user);
-      Provider.of<UserProvider>(context, listen: false).updateUser(user);
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-    } else {
-      CollectionReference<UserModel> collection =
-          FirebaseServices.getUsersCollection();
-      DocumentReference<UserModel> doc = collection.doc(
-        userCredential.user!.uid,
+      GoogleSignInAccount googleSignInAccount = await googleSignIn
+          .authenticate();
+      OAuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAccount.authentication.idToken,
       );
-      DocumentSnapshot<UserModel> userSnapShot = await doc.get();
-      UserModel user = userSnapShot.data()!;
-      Provider.of<UserProvider>(context, listen: false).updateUser(user);
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      UserModel user = UserModel(
+        name: googleSignInAccount.displayName ?? 'user',
+        email: googleSignInAccount.email,
+        id: userCredential.user!.uid,
+        favEventsId: [],
+      );
+
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        CollectionReference<UserModel> collection =
+            FirebaseServices.getUsersCollection();
+        DocumentReference<UserModel> doc = collection.doc(
+          userCredential.user!.uid,
+        );
+        doc.set(user);
+        Provider.of<UserProvider>(context, listen: false).updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      } else {
+        CollectionReference<UserModel> collection =
+            FirebaseServices.getUsersCollection();
+        DocumentReference<UserModel> doc = collection.doc(
+          userCredential.user!.uid,
+        );
+        DocumentSnapshot<UserModel> userSnapShot = await doc.get();
+        UserModel user = userSnapShot.data()!;
+        Provider.of<UserProvider>(context, listen: false).updateUser(user);
+        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      }
+    } catch (e) {
+      if (e is GoogleSignInException) UiUtils.showFailedMessage(e.toString());
     }
   }
 }

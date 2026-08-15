@@ -12,7 +12,6 @@ import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/personlization_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

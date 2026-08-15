@@ -27,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final formKey = GlobalKey<FormState>();
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -113,29 +115,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: CustomButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        FirebaseServices.login(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            )
-                            .then((user) {
-                              Navigator.of(
-                                context,
-                              ).pushReplacementNamed(HomeScreen.routeName);
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            if (formKey.currentState!.validate()) {
+                              isloading(true);
+                              FirebaseServices.login(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  )
+                                  .then((user) {
+                                    Navigator.of(context).pushReplacementNamed(
+                                      HomeScreen.routeName,
+                                    );
 
-                              Provider.of<UserProvider>(
-                                context,
-                                listen: false,
-                              ).updateUser(user);
-                            })
-                            .catchError((error) {
-                              if (error is FirebaseAuthException) {
-                                UiUtils.showFailedMessage(error.message);
-                              }
-                            });
-                      }
-                    },
+                                    Provider.of<UserProvider>(
+                                      context,
+                                      listen: false,
+                                    ).updateUser(user);
+                                  })
+                                  .catchError((error) {
+                                    isloading(false);
+                                    if (error is FirebaseAuthException) {
+                                      UiUtils.showFailedMessage(error.message);
+                                    }
+                                  });
+                            }
+                          },
                     text: 'Log in',
                   ),
                 ),
@@ -159,11 +165,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               SizedBox(height: 48),
-              GoogleButton(text: 'Login with Google'),
+              GoogleButton(
+                text: 'Login with Google',
+                isloading: isloading,
+                
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void isloading(bool pressed) {
+    isLoading = pressed;
+    setState(() {});
   }
 }

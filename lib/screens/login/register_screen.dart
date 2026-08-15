@@ -26,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var passwordController = TextEditingController();
   var nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -119,30 +120,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: CustomButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        FirebaseServices.register(
-                              name: nameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                            )
-                            .then((user) {
-                              Navigator.of(
-                                context,
-                              ).pushReplacementNamed(HomeScreen.routeName);
+                    onPressed: isloading
+                        ? null
+                        : () {
+                            if (formKey.currentState!.validate()) {
+                              isLoading(true);
+                              FirebaseServices.register(
+                                    name: nameController.text,
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  )
+                                  .then((user) {
+                                    Navigator.of(context).pushReplacementNamed(
+                                      HomeScreen.routeName,
+                                    );
 
-                              Provider.of<UserProvider>(
-                                context,
-                                listen: false,
-                              ).updateUser(user);
-                            })
-                            .catchError((error) {
-                              if (error is FirebaseAuthException) {
-                                UiUtils.showFailedMessage(error.message);
-                              }
-                            });
-                      }
-                    },
+                                    Provider.of<UserProvider>(
+                                      context,
+                                      listen: false,
+                                    ).updateUser(user);
+                                  })
+                                  .catchError((error) {
+                                    isLoading(false);
+                                    if (error is FirebaseAuthException) {
+                                      UiUtils.showFailedMessage(error.message);
+                                    }
+                                  });
+                            }
+                          },
                     text: 'Register',
                   ),
                 ),
@@ -170,11 +175,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
               SizedBox(height: 48),
-              GoogleButton(text: 'Register with Google'),
+              GoogleButton(text: 'Register with Google', isloading: isLoading),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void isLoading(bool pressed) {
+    isloading = pressed;
+    setState(() {});
   }
 }
