@@ -1,7 +1,9 @@
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingFramesPageview extends StatefulWidget {
   OnboardingFramesPageview({
@@ -23,6 +25,7 @@ class OnboardingFramesPageview extends StatefulWidget {
 class _OnboardingFramesPageviewState extends State<OnboardingFramesPageview> {
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     double screenHight = MediaQuery.sizeOf(context).height;
     return SizedBox(
       height: screenHight * .43,
@@ -40,7 +43,9 @@ class _OnboardingFramesPageviewState extends State<OnboardingFramesPageview> {
           child: SizedBox(
             height: screenHight * (350 / 812),
             child: Image.asset(
-              OnboardingPageDetails.getOnboardingPages[index].frame,
+              isDark
+                  ? OnboardingPageDetails.getOnboardingPages[index].darkFrame
+                  : OnboardingPageDetails.getOnboardingPages[index].frame,
             ),
           ),
         ),

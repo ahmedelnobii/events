@@ -1,6 +1,8 @@
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CustomTextFormField extends StatefulWidget {
   String hint;
@@ -34,7 +36,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     return TextFormField(
+      style: TextStyle(
+        color: isDark ? AppColors.darkMainText : AppColors.lightMainText,
+      ),
       controller: widget.controller,
       validator: widget.validator,
       obscureText: isObscure,
@@ -45,7 +51,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
         filled: true,
-        fillColor: AppColors.lightInputField,
+        fillColor: isDark
+            ? AppColors.darkInputField
+            : AppColors.lightInputField,
         hint: Text(widget.hint, style: Theme.of(context).textTheme.titleSmall),
         suffixIcon: widget.isPassword
             ? IconButton(
@@ -63,15 +71,27 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         suffixIconColor: widget.suffixColor ?? AppColors.gray,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: AppColors.lightOutLinePorder),
+          borderSide: BorderSide(
+            color: isDark
+                ? AppColors.darkOutLinePorder
+                : AppColors.lightOutLinePorder,
+          ),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: AppColors.lightOutLinePorder),
+          borderSide: BorderSide(
+            color: isDark
+                ? AppColors.darkOutLinePorder
+                : AppColors.lightOutLinePorder,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: AppColors.lightOutLinePorder),
+          borderSide: BorderSide(
+            color: isDark
+                ? AppColors.darkOutLinePorder
+                : AppColors.lightOutLinePorder,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

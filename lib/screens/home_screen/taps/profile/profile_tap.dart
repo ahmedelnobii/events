@@ -2,6 +2,7 @@ import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/language_model.dart';
 import 'package:events/model/user_model.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/login/login_screen.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
@@ -14,7 +15,7 @@ class ProfileTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UserModel user = Provider.of<UserProvider>(context).user!;
-
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     double screenWidth = MediaQuery.sizeOf(context).width;
     TextTheme textTheme = Theme.of(context).textTheme;
     return SafeArea(
@@ -39,26 +40,53 @@ class ProfileTap extends StatelessWidget {
               children: [
                 SwitchListTile(
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.lightOutLinePorder),
+                    side: BorderSide(
+                      color: isDark
+                          ? AppColors.darkOutLinePorder
+                          : AppColors.lightOutLinePorder,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  tileColor: AppColors.lightInputField,
+                  tileColor: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   title: Text('Dark Mode', style: textTheme.titleMedium),
                   thumbColor: WidgetStatePropertyAll(AppColors.lightInputField),
                   trackOutlineColor: WidgetStatePropertyAll(Colors.transparent),
-                  trackColor: WidgetStatePropertyAll(AppColors.lightSoftGrey),
-                  value: false,
-                  onChanged: (_) {},
+                  trackColor: WidgetStatePropertyAll(
+                    isDark ? AppColors.darkPrimiary : AppColors.lightSoftGrey,
+                  ),
+                  value: isDark,
+                  onChanged: (_) {
+                    if (isDark) {
+                      Provider.of<ThemeProvider>(
+                        context,
+                        listen: false,
+                      ).changeTheme(.light);
+                    } else {
+                      Provider.of<ThemeProvider>(
+                        context,
+                        listen: false,
+                      ).changeTheme(.dark);
+                    }
+                  },
                 ),
                 SizedBox(height: 16),
                 ListTile(
                   title: Text('Language', style: textTheme.titleMedium),
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.lightOutLinePorder),
+                    side: BorderSide(
+                      color: isDark
+                          ? AppColors.darkOutLinePorder
+                          : AppColors.lightOutLinePorder,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  tileColor: AppColors.lightInputField,
+                  tileColor: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   trailing: DropdownButton(
+                    dropdownColor: isDark ? AppColors.darkPrimiary : null,
                     borderRadius: BorderRadius.circular(16),
                     value: 'en',
                     underline: SizedBox(),
@@ -77,10 +105,16 @@ class ProfileTap extends StatelessWidget {
                 ListTile(
                   title: Text('Logout', style: textTheme.titleMedium),
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.lightOutLinePorder),
+                    side: BorderSide(
+                      color: isDark
+                          ? AppColors.darkOutLinePorder
+                          : AppColors.lightOutLinePorder,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  tileColor: AppColors.lightInputField,
+                  tileColor: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   trailing: InkWell(
                     onTap: () {
                       FirebaseServices.logout().then((_) {

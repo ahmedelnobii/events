@@ -1,10 +1,12 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/widgets/language_botton_item.dart';
 import 'package:events/screens/onboarding/widgets/theme_bottom_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class PersonlizationScreen extends StatefulWidget {
   static const routeName = '/personlizationScreen';
@@ -14,18 +16,19 @@ class PersonlizationScreen extends StatefulWidget {
 }
 
 class _PersonlizationScreenState extends State<PersonlizationScreen> {
-  bool isLightTheme = true;
-  late bool isDarkTheme = !isLightTheme;
-
   bool isEn = true;
-  late bool isAr = !isEn;
-
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     double screenHight = MediaQuery.sizeOf(context).height;
     double screenWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
-      appBar: AppBar(title: Image.asset(AppImages.lightLogo, fit: .scaleDown)),
+      appBar: AppBar(
+        title: Image.asset(
+          isDark ? AppImages.darkLogo : AppImages.lightLogo,
+          fit: .scaleDown,
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
@@ -37,7 +40,9 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                   crossAxisAlignment: .stretch,
                   children: [
                     Image.asset(
-                      AppImages.presonalizetionScreenPhoto,
+                      isDark
+                          ? AppImages.darkPresonalizetionScreenPhoto
+                          : AppImages.presonalizetionScreenPhoto,
                       fit: .contain,
                       height: screenHight * (343 / 812),
                       width: screenWidth * (343 / 375),
@@ -58,7 +63,9 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                                 style: TextStyle(
                                   fontWeight: .w600,
                                   fontSize: 20.sp,
-                                  color: AppColors.lightMainText,
+                                  color: isDark
+                                      ? AppColors.darkMainText
+                                      : AppColors.lightMainText,
                                 ),
                               ),
                             ),
@@ -78,7 +85,9 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                           child: Text(
                             'Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.',
                             style: TextStyle(
-                              color: AppColors.lightSecText,
+                              color: isDark
+                                  ? AppColors.darkSecText
+                                  : AppColors.lightSecText,
                               fontWeight: .w400,
                             ),
                           ),
@@ -95,7 +104,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                             Text(
                               'Language',
                               style: TextStyle(
-                                color: AppColors.lightPrimiary,
+                                color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
                               ),
@@ -110,7 +119,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                                   language: 'English',
                                 ),
                                 LanguageBottonItem(
-                                  isActive: isAr,
+                                  isActive: !isEn,
                                   onPressed: onArabicPressed,
                                   language: 'Arabic',
                                 ),
@@ -125,7 +134,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                               'Theme',
 
                               style: TextStyle(
-                                color: AppColors.lightPrimiary,
+                                color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.sp,
                               ),
@@ -137,12 +146,12 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                                 ThemeBottomItem(
                                   onPressed: onlightPressed,
                                   icon: Icons.sunny,
-                                  isActive: isLightTheme,
+                                  isActive: !isDark,
                                 ),
                                 ThemeBottomItem(
                                   onPressed: onDarkPressed,
                                   icon: Icons.nightlight_outlined,
-                                  isActive: isDarkTheme,
+                                  isActive: isDark,
                                 ),
                               ],
                             ),
@@ -156,7 +165,9 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
               SizedBox(height: 16.h),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed(OnboardingScreen.routName);
+                  Navigator.of(
+                    context,
+                  ).pushReplacementNamed(OnboardingScreen.routName);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.all(8),
@@ -178,26 +189,22 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
   }
 
   void onEnglishPressed() {
-    isAr = false;
     isEn = true;
     setState(() {});
   }
 
   void onArabicPressed() {
-    isAr = true;
     isEn = false;
     setState(() {});
   }
 
   void onlightPressed() {
-    isDarkTheme = false;
-    isLightTheme = true;
+    Provider.of<ThemeProvider>(context, listen: false).changeTheme(.light);
     setState(() {});
   }
 
   void onDarkPressed() {
-    isDarkTheme = true;
-    isLightTheme = false;
+    Provider.of<ThemeProvider>(context, listen: false).changeTheme(.dark);
     setState(() {});
   }
 }

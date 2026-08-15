@@ -1,6 +1,7 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/event_model.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/preview_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,8 @@ class EventItem extends StatefulWidget {
 class _EventItemState extends State<EventItem> {
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     var userProvider = Provider.of<UserProvider>(context);
     bool isFavourite = Provider.of<UserProvider>(
       context,
@@ -37,7 +40,9 @@ class _EventItemState extends State<EventItem> {
             ClipRRect(
               borderRadius: BorderRadiusGeometry.circular(16),
               child: Image.asset(
-                widget.event.categoryModel.image,
+                isDark
+                    ? widget.event.categoryModel.darkImage
+                    : widget.event.categoryModel.image,
                 height: screenHeight * .25,
                 width: double.infinity,
                 fit: .fill,
@@ -49,8 +54,15 @@ class _EventItemState extends State<EventItem> {
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                   borderRadius: BorderRadius.circular(8),
-                  color: AppColors.lightBackground,
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightBackground,
                 ),
 
                 child: Text(
@@ -69,7 +81,14 @@ class _EventItemState extends State<EventItem> {
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.lightBackground,
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -78,7 +97,9 @@ class _EventItemState extends State<EventItem> {
                     Expanded(
                       child: Text(
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: AppColors.lightMainText,
+                          color: isDark
+                              ? AppColors.darkMainText
+                              : AppColors.lightMainText,
                           fontWeight: .w400,
                         ),
                         widget.event.description,

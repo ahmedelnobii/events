@@ -3,6 +3,7 @@ import 'package:events/core/theme/app_colors.dart';
 import 'package:events/core/theme/app_theme.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/edit_screen.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
 import 'package:events/screens/widgets/ui_utils.dart';
@@ -20,6 +21,8 @@ class PreviewScreen extends StatelessWidget {
     var screenSize = MediaQuery.sizeOf(context);
     var event = ModalRoute.of(context)!.settings.arguments as EventModel;
     var theme = Theme.of(context);
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -28,10 +31,18 @@ class PreviewScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back_ios_new),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.lightInputField,
-            foregroundColor: theme.primaryColor,
+            backgroundColor: isDark
+                ? AppColors.darkInputField
+                : AppColors.lightInputField,
+            foregroundColor: isDark
+                ? AppColors.darkMainText
+                : theme.primaryColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.lightOutLinePorder),
+              side: BorderSide(
+                color: isDark
+                    ? AppColors.darkOutLinePorder
+                    : AppColors.lightOutLinePorder,
+              ),
               borderRadius: BorderRadiusGeometry.circular(8),
             ),
           ),
@@ -48,9 +59,15 @@ class PreviewScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: AppColors.lightInputField,
+                  color: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.lightOutLinePorder),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                 ),
                 child: SvgPicture.asset(
                   AppIcons.edit,
@@ -83,9 +100,15 @@ class PreviewScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: AppColors.lightInputField,
+                  color: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.lightOutLinePorder),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                 ),
                 child: SvgPicture.asset(
                   AppIcons.delete,
@@ -113,15 +136,19 @@ class PreviewScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppColors.lightOutLinePorder,
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
                     style: .solid,
                   ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(16),
                   child: Image.asset(
-                    event.categoryModel.image,
-                    fit: .contain,
+                    isDark
+                        ? event.categoryModel.darkImage
+                        : event.categoryModel.image,
+                    fit: .cover,
                     isAntiAlias: true,
                   ),
                 ),
@@ -130,9 +157,15 @@ class PreviewScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.lightInputField,
+                  color: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.lightOutLinePorder),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                 ),
                 child: Row(
                   spacing: 16,
@@ -140,9 +173,15 @@ class PreviewScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        color: AppColors.lightBackground,
+                        color: isDark
+                            ? Colors.transparent
+                            : AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.lightOutLinePorder),
+                        border: Border.all(
+                          color: isDark
+                              ? AppColors.darkOutLinePorder
+                              : AppColors.lightOutLinePorder,
+                        ),
                       ),
                       child: SvgPicture.asset(
                         AppIcons.eventDate,
@@ -168,7 +207,7 @@ class PreviewScreen extends StatelessWidget {
                           ),
 
                           Text(
-                            DateFormat('h:m a').format(event.dateTime),
+                            DateFormat('hh:mm a').format(event.dateTime),
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: .w500,
                               color: AppColors.gray,
@@ -189,14 +228,22 @@ class PreviewScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.lightInputField,
+                  color: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.lightOutLinePorder),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                 ),
                 child: Text(
                   event.description,
                   style: theme.textTheme.titleSmall?.copyWith(
-                    color: AppColors.lightMainText,
+                    color: isDark
+                        ? AppColors.darkMainText
+                        : AppColors.lightMainText,
                     fontWeight: .w400,
                   ),
                 ),

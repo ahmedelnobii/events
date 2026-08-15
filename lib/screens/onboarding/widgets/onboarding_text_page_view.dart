@@ -1,8 +1,10 @@
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class OnboardingTextPageView extends StatefulWidget {
   OnboardingTextPageView({
@@ -23,6 +25,7 @@ class _OnboardingTextPageViewState extends State<OnboardingTextPageView> {
   @override
   Widget build(BuildContext context) {
     double screenHight = MediaQuery.sizeOf(context).height;
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     return SizedBox(
       height: .3 * screenHight,
       child: PageView.builder(
@@ -46,7 +49,9 @@ class _OnboardingTextPageViewState extends State<OnboardingTextPageView> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.lightMainText,
+                    color: isDark
+                        ? AppColors.darkMainText
+                        : AppColors.lightMainText,
                   ),
                 ),
                 Text(
@@ -54,7 +59,9 @@ class _OnboardingTextPageViewState extends State<OnboardingTextPageView> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.lightSecText,
+                    color: isDark
+                        ? AppColors.darkSecText
+                        : AppColors.lightSecText,
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/login/login_screen.dart';
 import 'package:events/screens/onboarding/widgets/onboarding_frames_pageview.dart';
@@ -7,6 +8,7 @@ import 'package:events/screens/onboarding/widgets/onboarding_page_services.dart'
 import 'package:events/screens/onboarding/widgets/onboarding_text_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'
     as smooth_page_indicator;
@@ -25,9 +27,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   PageController textController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset(AppImages.lightLogo, fit: .scaleDown),
+        title: Image.asset(
+          isDark ? AppImages.darkLogo : AppImages.lightLogo,
+          fit: .scaleDown,
+        ),
         leading: Visibility(
           visible: index != 0,
           child: Padding(
@@ -45,10 +52,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
               icon: Icon(Icons.arrow_back_ios_rounded, size: 24),
               style: IconButton.styleFrom(
-                backgroundColor: AppColors.lightInputField,
-                foregroundColor: AppColors.lightPrimiary,
+                backgroundColor: isDark
+                    ? AppColors.darkInputField
+                    : AppColors.lightInputField,
+                foregroundColor: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: AppColors.lightOutLinePorder),
+                  side: BorderSide(
+                    color: isDark
+                        ? AppColors.darkOutLinePorder
+                        : AppColors.lightOutLinePorder,
+                  ),
                   borderRadius: BorderRadiusGeometry.circular(18),
                 ),
               ),
@@ -65,10 +78,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   textController.jumpToPage(2);
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: AppColors.lightInputField,
+                  backgroundColor: isDark
+                      ? AppColors.darkInputField
+                      : AppColors.lightInputField,
                   foregroundColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.lightOutLinePorder),
+                    side: BorderSide(
+                      color: isDark
+                          ? AppColors.darkOutLinePorder
+                          : AppColors.lightOutLinePorder,
+                    ),
                     borderRadius: BorderRadiusGeometry.circular(18),
                   ),
                 ),
@@ -100,8 +119,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     effect: ExpandingDotsEffect(
                       dotHeight: 8,
                       dotWidth: 8,
-                      activeDotColor: AppColors.lightPrimiary,
-                      dotColor: AppColors.lightSecText,
+                      activeDotColor: Theme.of(context).primaryColor,
+                      dotColor: isDark
+                          ? AppColors.darkSecText
+                          : AppColors.lightSecText,
                     ),
                   ),
                 ],

@@ -6,6 +6,7 @@ import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/category_model.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
@@ -58,6 +59,9 @@ class _EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
     event = ModalRoute.of(context)?.settings.arguments as EventModel;
     var textTheme = Theme.of(context).textTheme;
+    var theme = Theme.of(context);
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit event"),
@@ -67,10 +71,18 @@ class _EditScreenState extends State<EditScreen> {
           },
           icon: Icon(Icons.arrow_back_ios_new),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.lightInputField,
-            foregroundColor: Theme.of(context).primaryColor,
+            backgroundColor: isDark
+                ? AppColors.darkInputField
+                : AppColors.lightInputField,
+            foregroundColor: isDark
+                ? AppColors.darkMainText
+                : theme.primaryColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.lightOutLinePorder),
+              side: BorderSide(
+                color: isDark
+                    ? AppColors.darkOutLinePorder
+                    : AppColors.lightOutLinePorder,
+              ),
               borderRadius: BorderRadiusGeometry.circular(8),
             ),
           ),
@@ -89,7 +101,9 @@ class _EditScreenState extends State<EditScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
-                      CategoryModel.categories[currentIndex].image,
+                      isDark
+                          ? CategoryModel.categories[currentIndex].darkImage
+                          : CategoryModel.categories[currentIndex].image,
                       fit: .contain,
                     ),
                   ),
@@ -179,7 +193,10 @@ class _EditScreenState extends State<EditScreen> {
                                 ),
                               ),
                               SizedBox(width: 5),
-                              Text('Event Date'),
+                              Text(
+                                'Event Date',
+                                style: theme.textTheme.titleMedium,
+                              ),
                             ],
                           ),
                           InkWell(
@@ -202,7 +219,7 @@ class _EditScreenState extends State<EditScreen> {
                               setState(() {});
                             },
                             child: Text(
-                              _dayDate = "$_dayDate",
+                              _dayDate = _dayDate,
                               style: textTheme.titleSmall!.copyWith(
                                 color: Theme.of(context).primaryColor,
                                 decoration: .underline,
@@ -229,7 +246,10 @@ class _EditScreenState extends State<EditScreen> {
                                 ),
                               ),
                               SizedBox(width: 5),
-                              Text('Event Time'),
+                              Text(
+                                'Event Time',
+                                style: theme.textTheme.titleMedium,
+                              ),
                             ],
                           ),
                           InkWell(
@@ -241,6 +261,9 @@ class _EditScreenState extends State<EditScreen> {
                               );
                               Navigator.of(context).push(
                                 showPicker(
+                                  backgroundColor: isDark
+                                      ? AppColors.darkBackground
+                                      : null,
                                   showSecondSelector: false,
                                   context: context,
                                   value: _time,

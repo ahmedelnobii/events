@@ -1,5 +1,7 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
+import 'package:events/core/theme/app_colors.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/login/googleButton.dart';
@@ -31,10 +33,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     var textTheme = Theme.of(context).textTheme;
     var theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Image.asset(AppImages.lightLogo, fit: .scaleDown)),
+      appBar: AppBar(
+        title: Image.asset(
+          isDark ? AppImages.darkLogo : AppImages.lightLogo,
+          fit: .scaleDown,
+        ),
+      ),
       body: Padding(
         padding: EdgeInsetsGeometry.all(16),
         child: SingleChildScrollView(
@@ -165,11 +174,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               SizedBox(height: 48),
-              GoogleButton(
-                text: 'Login with Google',
-                isloading: isloading,
-                
+              Stack(
+                alignment: .center,
+                children: [
+                  Divider(color: AppColors.gray),
+                  Container(
+                    color: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
+                    child: Text(
+                      '  or  ',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
+              SizedBox(height: 48),
+              GoogleButton(text: 'Login with Google', isloading: isloading),
             ],
           ),
         ),

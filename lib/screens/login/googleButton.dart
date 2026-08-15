@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/model/user_model.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
@@ -25,6 +26,8 @@ class _GoogleButtonState extends State<GoogleButton> {
   bool isPressed = false;
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
+
     return ElevatedButton(
       onPressed: isPressed
           ? null
@@ -42,9 +45,18 @@ class _GoogleButtonState extends State<GoogleButton> {
               }
             },
       style: ElevatedButton.styleFrom(
-        surfaceTintColor: AppColors.lightInputField,
+        side: BorderSide(
+          color: isDark
+              ? AppColors.darkOutLinePorder
+              : AppColors.lightOutLinePorder,
+        ),
+        surfaceTintColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightInputField,
         foregroundColor: Theme.of(context).primaryColor,
-        backgroundColor: AppColors.lightInputField,
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightInputField,
         padding: EdgeInsets.all(8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(16.r),
