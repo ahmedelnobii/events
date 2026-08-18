@@ -1,10 +1,13 @@
 import 'package:events/core/constants/app_icons.dart';
+import 'package:events/l10n/app_localizations.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/add_event_screen.dart';
 import 'package:events/screens/home_screen/taps/favorite/favorite_tap.dart';
 import 'package:events/screens/home_screen/taps/home/home_tap.dart';
 import 'package:events/screens/home_screen/taps/profile/profile_tap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/HomeScreen';
@@ -18,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> taps = [HomeTap(), FavoriteTap(), ProfileTap()];
   @override
   Widget build(BuildContext context) {
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: taps[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -28,11 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         items: [
           BottomNavigationBarItem(
-            label: 'Home',
+            label: AppLocalizations.of(context)!.home,
             activeIcon: SvgPicture.asset(
               AppIcons.selectedHome,
               height: 24,
               width: 24,
+              colorFilter: isDark
+                  ? ColorFilter.mode(Theme.of(context).primaryColor, .srcIn)
+                  : null,
             ),
             icon: SvgPicture.asset(
               AppIcons.unSelectedHome,
@@ -41,11 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: 'Favorite',
+            label: AppLocalizations.of(context)!.favorite,
             activeIcon: SvgPicture.asset(
               AppIcons.selectedFavorite,
               height: 24,
               width: 24,
+              colorFilter: isDark
+                  ? ColorFilter.mode(Theme.of(context).primaryColor, .srcIn)
+                  : null,
             ),
             icon: SvgPicture.asset(
               AppIcons.unSelectedFavorite,
@@ -54,11 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           BottomNavigationBarItem(
-            label: 'profile',
+            label: AppLocalizations.of(context)!.profile,
             activeIcon: SvgPicture.asset(
               AppIcons.selectedProfile,
               height: 24,
               width: 24,
+              colorFilter: isDark
+                  ? ColorFilter.mode(Theme.of(context).primaryColor, .srcIn)
+                  : null,
             ),
             icon: SvgPicture.asset(
               AppIcons.unSelectedProfile,

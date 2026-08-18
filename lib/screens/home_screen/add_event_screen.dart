@@ -3,9 +3,11 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/category_model.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/taps/home/widgets/tab_item.dart';
 import 'package:events/screens/widgets/custom_button.dart';
 import 'package:events/screens/widgets/custom_text_form_fieled.dart';
@@ -38,27 +40,55 @@ class _AddEventScreenState extends State<AddEventScreen> {
     });
   }
 
+  late AppLocalizations local;
+  String? titleByLabels(String label) {
+    switch (label) {
+      case 'Sport':
+        return local.sport;
+      case 'Book club':
+        return local.bookclub;
+      case 'Birthday':
+        return local.birthday;
+      case 'Exhibition':
+        return local.exhibition;
+      case 'Meeting':
+        return local.meeting;
+      default:
+        return null;
+    }
+  }
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
+    local = AppLocalizations.of(context)!;
+
+    bool isDark = Provider.of<ThemeProvider>(context).isDark;
     var textTheme = Theme.of(context).textTheme;
+    var theme = Theme.of(context);
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Add event"),
+        title: Text(AppLocalizations.of(context)!.addEvent),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_ios_new),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.lightInputField,
-            foregroundColor: AppColors.lightPrimiary,
+            backgroundColor: isDark
+                ? AppColors.darkInputField
+                : AppColors.lightInputField,
+            foregroundColor: theme.primaryColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: AppColors.lightOutLinePorder),
+              side: BorderSide(
+                color: isDark
+                    ? AppColors.darkOutLinePorder
+                    : AppColors.lightOutLinePorder,
+              ),
               borderRadius: BorderRadiusGeometry.circular(8),
             ),
           ),
@@ -77,7 +107,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
                     child: Image.asset(
-                      CategoryModel.categories[currentIndex].image,
+                      isDark
+                          ? CategoryModel.categories[currentIndex].darkImage
+                          : CategoryModel.categories[currentIndex].image,
                       fit: .contain,
                     ),
                   ),
@@ -99,7 +131,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   tabs: CategoryModel.categories.map((category) {
                     return TabItem(
                       icon: category.icon,
-                      label: category.label,
+                      label: titleByLabels(category.label) ?? category.label,
                       isSelected:
                           currentIndex ==
                           CategoryModel.categories.indexOf(category),
@@ -115,11 +147,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     children: [
                       Row(
                         mainAxisAlignment: .start,
-                        children: [Text('Title', style: textTheme.titleMedium)],
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.title,
+                            style: textTheme.titleMedium,
+                          ),
+                        ],
                       ),
                       SizedBox(height: 5),
                       CustomTextFormField(
-                        hint: 'Event Title',
+                        hint: AppLocalizations.of(context)!.eventTitle,
                         controller: titleController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -133,13 +170,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       Row(
                         mainAxisAlignment: .start,
                         children: [
-                          Text('Description', style: textTheme.titleMedium),
+                          Text(
+                            AppLocalizations.of(context)!.description,
+                            style: textTheme.titleMedium,
+                          ),
                         ],
                       ),
                       SizedBox(height: 5),
 
                       CustomTextFormField(
-                        hint: 'Event Description....',
+                        hint: AppLocalizations.of(context)!.eventDescription,
                         maxLines: 5,
                         controller: descriptionController,
                         validator: (value) {
@@ -149,7 +189,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 32),
 
                       Row(
                         mainAxisAlignment: .spaceBetween,
@@ -167,7 +207,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                 ),
                               ),
                               SizedBox(width: 5),
-                              Text('Event Date'),
+                              Text(
+                                AppLocalizations.of(context)!.eventDate,
+                                style: textTheme.titleMedium,
+                              ),
                             ],
                           ),
                           InkWell(
@@ -190,7 +233,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               setState(() {});
                             },
                             child: Text(
-                              _dayDate == null ? 'choose date' : "$_dayDate",
+                              _dayDate == null
+                                  ? AppLocalizations.of(context)!.chooseDate
+                                  : "$_dayDate",
                               style: textTheme.titleSmall!.copyWith(
                                 color: Theme.of(context).primaryColor,
                                 decoration: .underline,
@@ -217,7 +262,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                                 ),
                               ),
                               SizedBox(width: 5),
-                              Text('Event Time'),
+                              Text(
+                                AppLocalizations.of(context)!.eventTime,
+                                style: textTheme.titleMedium,
+                              ),
                             ],
                           ),
                           InkWell(
@@ -229,6 +277,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               );
                               Navigator.of(context).push(
                                 showPicker(
+                                  backgroundColor: isDark ? Colors.black : null,
                                   showSecondSelector: false,
                                   context: context,
                                   value: _time,
@@ -254,7 +303,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               );
                             },
                             child: Text(
-                              _dateTime == null ? 'choose time' : '$_dateTime',
+                              _dateTime == null
+                                  ? AppLocalizations.of(context)!.chooseTime
+                                  : '$_dateTime',
                               style: textTheme.titleSmall!.copyWith(
                                 color: Theme.of(context).primaryColor,
                                 decoration: .underline,
@@ -268,10 +319,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 32),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomButton(text: 'Add Event', onPressed: onAddEvent),
+                child: CustomButton(
+                  text: AppLocalizations.of(context)!.addEvent,
+                  onPressed: onAddEvent,
+                ),
               ),
             ],
           ),

@@ -1,7 +1,9 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/language_model.dart';
 import 'package:events/model/user_model.dart';
+import 'package:events/providers/local_provider.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/login/login_screen.dart';
@@ -14,6 +16,8 @@ import 'package:provider/provider.dart';
 class ProfileTap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var local = AppLocalizations.of(context)!;
+
     UserModel user = Provider.of<UserProvider>(context).user!;
     bool isDark = Provider.of<ThemeProvider>(context).isDark;
     double screenWidth = MediaQuery.sizeOf(context).width;
@@ -50,7 +54,7 @@ class ProfileTap extends StatelessWidget {
                   tileColor: isDark
                       ? AppColors.darkInputField
                       : AppColors.lightInputField,
-                  title: Text('Dark Mode', style: textTheme.titleMedium),
+                  title: Text(local.darkMode, style: textTheme.titleMedium),
                   thumbColor: WidgetStatePropertyAll(AppColors.lightInputField),
                   trackOutlineColor: WidgetStatePropertyAll(Colors.transparent),
                   trackColor: WidgetStatePropertyAll(
@@ -73,7 +77,7 @@ class ProfileTap extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 ListTile(
-                  title: Text('Language', style: textTheme.titleMedium),
+                  title: Text(local.language, style: textTheme.titleMedium),
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
                       color: isDark
@@ -88,7 +92,7 @@ class ProfileTap extends StatelessWidget {
                   trailing: DropdownButton(
                     dropdownColor: isDark ? AppColors.darkPrimiary : null,
                     borderRadius: BorderRadius.circular(16),
-                    value: 'en',
+                    value: Provider.of<LocalProvider>(context).language,
                     underline: SizedBox(),
                     items: LanguageModel.languages
                         .map(
@@ -98,12 +102,17 @@ class ProfileTap extends StatelessWidget {
                           ),
                         )
                         .toList(),
-                    onChanged: (_) {},
+                    onChanged: (code) {
+                      Provider.of<LocalProvider>(
+                        context,
+                        listen: false,
+                      ).changeLanguge(code!);
+                    },
                   ),
                 ),
                 SizedBox(height: 16),
                 ListTile(
-                  title: Text('Logout', style: textTheme.titleMedium),
+                  title: Text(local.logout, style: textTheme.titleMedium),
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
                       color: isDark

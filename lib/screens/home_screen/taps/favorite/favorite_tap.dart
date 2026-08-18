@@ -1,3 +1,4 @@
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
 import 'package:events/providers/user_provider.dart';
@@ -15,6 +16,8 @@ class FavoriteTap extends StatefulWidget {
 class _FavoriteTapState extends State<FavoriteTap> {
   @override
   Widget build(BuildContext context) {
+        var local = AppLocalizations.of(context)!;
+
     List<EventModel> allevents = Provider.of<EventProvider>(context).allEvents;
     List<EventModel> FavoriteList = Provider.of<UserProvider>(context)
         .user!
@@ -29,7 +32,7 @@ class _FavoriteTapState extends State<FavoriteTap> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
             child: CustomTextFormField(
-              hint: 'Search for event',
+              hint: local.searchHint,
               suffix: Icon(CupertinoIcons.search),
               suffixColor: Theme.of(context).primaryColor,
             ),

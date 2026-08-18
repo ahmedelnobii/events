@@ -37,7 +37,7 @@ class CategoryModel {
       label: 'Book club',
       id: 'Bookc club',
       image: AppImages.lightBookClub,
-      darkImage: AppImages.darkBirthday,
+      darkImage: AppImages.darkBookClub,
     ),
     CategoryModel(
       icon: Icons.meeting_room_outlined,

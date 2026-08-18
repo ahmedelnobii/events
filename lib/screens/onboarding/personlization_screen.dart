@@ -1,5 +1,7 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
+import 'package:events/providers/local_provider.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/onboarding/onboarding_screen.dart';
 import 'package:events/screens/onboarding/widgets/language_botton_item.dart';
@@ -16,12 +18,14 @@ class PersonlizationScreen extends StatefulWidget {
 }
 
 class _PersonlizationScreenState extends State<PersonlizationScreen> {
-  bool isEn = true;
+  late bool isArabic;
+  late bool isEn = !isArabic;
   @override
   Widget build(BuildContext context) {
     bool isDark = Provider.of<ThemeProvider>(context).isDark;
     double screenHight = MediaQuery.sizeOf(context).height;
     double screenWidth = MediaQuery.sizeOf(context).width;
+    isArabic = Provider.of<LocalProvider>(context).isArabic;
     return Scaffold(
       appBar: AppBar(
         title: Image.asset(
@@ -56,9 +60,11 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                           Expanded(
                             flex: 7,
                             child: FittedBox(
-                              alignment: .centerLeft,
+                              alignment: .topStart,
                               child: Text(
-                                'Personalize Your Experience',
+                                AppLocalizations.of(
+                                  context,
+                                )!.personalizeYourExperience,
                                 textAlign: .start,
                                 style: TextStyle(
                                   fontWeight: .w600,
@@ -83,7 +89,10 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                         child: SizedBox(
                           width: screenWidth * .76,
                           child: Text(
-                            'Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.',
+                            textAlign: .start,
+                            AppLocalizations.of(
+                              context,
+                            )!.personalizeYourExperienceDescription,
                             style: TextStyle(
                               color: isDark
                                   ? AppColors.darkSecText
@@ -102,7 +111,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                         Row(
                           children: [
                             Text(
-                              'Language',
+                              AppLocalizations.of(context)!.language,
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 fontWeight: FontWeight.w500,
@@ -131,7 +140,7 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                         Row(
                           children: [
                             Text(
-                              'Theme',
+                              AppLocalizations.of(context)!.theme,
 
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
@@ -176,8 +185,11 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
                   ),
                 ),
                 child: Text(
-                  'Let\'s start',
-                  style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
+                  AppLocalizations.of(context)!.letsStart,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20.sp,
+                  ),
                 ),
               ),
               SizedBox(height: 16.h),
@@ -190,11 +202,13 @@ class _PersonlizationScreenState extends State<PersonlizationScreen> {
 
   void onEnglishPressed() {
     isEn = true;
+    Provider.of<LocalProvider>(context, listen: false).changeLanguge('en');
     setState(() {});
   }
 
   void onArabicPressed() {
     isEn = false;
+    Provider.of<LocalProvider>(context, listen: false).changeLanguge('ar');
     setState(() {});
   }
 

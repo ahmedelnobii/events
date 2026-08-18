@@ -16,20 +16,25 @@ import 'package:provider/provider.dart';
 class GoogleButton extends StatefulWidget {
   String text;
   void Function(bool) isloading;
-  GoogleButton({required this.text, required this.isloading});
+  bool isPressed;
+  GoogleButton({
+    required this.text,
+    required this.isloading,
+    required this.isPressed,
+  });
 
   @override
   State<GoogleButton> createState() => _GoogleButtonState();
 }
 
 class _GoogleButtonState extends State<GoogleButton> {
-  bool isPressed = false;
+  late bool isPressed = widget.isPressed;
   @override
   Widget build(BuildContext context) {
     bool isDark = Provider.of<ThemeProvider>(context).isDark;
 
     return ElevatedButton(
-      onPressed: isPressed
+      onPressed: widget.isPressed
           ? null
           : () async {
               setState(() {

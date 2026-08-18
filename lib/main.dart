@@ -1,6 +1,8 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:events/core/theme/app_theme.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/providers/event_provider.dart';
+import 'package:events/providers/local_provider.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/add_event_screen.dart';
@@ -17,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => EventProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => LocalProvider()),
       ],
       child: Events(),
     ),
@@ -56,12 +60,15 @@ class Events extends StatelessWidget {
           EditScreen.routeName: (context) => EditScreen(),
         },
         // home: LoginScreen(),
-        initialRoute: false
+        initialRoute: OnboardingPageDetails.isOnboardingSeen
             ? LoginScreen.routeName
             : PersonlizationScreen.routeName,
         themeMode: Provider.of<ThemeProvider>(context).currentTheme,
         darkTheme: AppTheme.dark,
         theme: AppTheme.lightTheme,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: Locale(Provider.of<LocalProvider>(context).language),
       ),
     );
   }

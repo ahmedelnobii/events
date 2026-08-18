@@ -1,5 +1,6 @@
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
 import 'package:events/screens/login/login_screen.dart';
@@ -91,7 +92,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     borderRadius: BorderRadiusGeometry.circular(18),
                   ),
                 ),
-                child: Text('skip', style: TextStyle(fontSize: 18)),
+                child: Text(
+                  AppLocalizations.of(context)!.skip,
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ),
         ],
@@ -165,7 +169,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
               child: Text(
-                index == 2 ? 'Finish ' : 'Next',
+                index == 2
+                    ? AppLocalizations.of(context)!.getStarted
+                    : AppLocalizations.of(context)!.next,
                 style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
               ),
             ),

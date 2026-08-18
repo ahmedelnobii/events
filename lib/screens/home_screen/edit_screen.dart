@@ -3,6 +3,7 @@ import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/category_model.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
@@ -55,16 +56,35 @@ class _EditScreenState extends State<EditScreen> {
     super.initState();
   }
 
+  late AppLocalizations local;
+  String? titleByLabels(String label) {
+    switch (label) {
+      case 'Sport':
+        return local.sport;
+      case 'Book club':
+        return local.bookclub;
+      case 'Birthday':
+        return local.birthday;
+      case 'Exhibition':
+        return local.exhibition;
+      case 'Meeting':
+        return local.meeting;
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     event = ModalRoute.of(context)?.settings.arguments as EventModel;
     var textTheme = Theme.of(context).textTheme;
     var theme = Theme.of(context);
     bool isDark = Provider.of<ThemeProvider>(context).isDark;
+    local = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit event"),
+        title: Text(local.editEvent),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -125,7 +145,7 @@ class _EditScreenState extends State<EditScreen> {
                   tabs: CategoryModel.categories.map((category) {
                     return TabItem(
                       icon: category.icon,
-                      label: category.label,
+                      label: titleByLabels(category.label) ?? category.label,
                       isSelected:
                           currentIndex ==
                           CategoryModel.categories.indexOf(category),
@@ -141,11 +161,13 @@ class _EditScreenState extends State<EditScreen> {
                     children: [
                       Row(
                         mainAxisAlignment: .start,
-                        children: [Text('Title', style: textTheme.titleMedium)],
+                        children: [
+                          Text(local.title, style: textTheme.titleMedium),
+                        ],
                       ),
                       SizedBox(height: 5),
                       CustomTextFormField(
-                        hint: 'Event Title',
+                        hint: local.eventTitle,
                         controller: titleController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -159,13 +181,13 @@ class _EditScreenState extends State<EditScreen> {
                       Row(
                         mainAxisAlignment: .start,
                         children: [
-                          Text('Description', style: textTheme.titleMedium),
+                          Text(local.description, style: textTheme.titleMedium),
                         ],
                       ),
                       SizedBox(height: 5),
 
                       CustomTextFormField(
-                        hint: 'Event Description....',
+                        hint: local.eventDescription,
                         maxLines: 5,
                         controller: descriptionController,
                         validator: (value) {
@@ -194,7 +216,7 @@ class _EditScreenState extends State<EditScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                'Event Date',
+                                local.eventDate,
                                 style: theme.textTheme.titleMedium,
                               ),
                             ],
@@ -247,7 +269,7 @@ class _EditScreenState extends State<EditScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                'Event Time',
+                                local.eventTime,
                                 style: theme.textTheme.titleMedium,
                               ),
                             ],
@@ -307,7 +329,7 @@ class _EditScreenState extends State<EditScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: CustomButton(
-                  text: 'Update Event',
+                  text: local.editEvent,
                   onPressed: onUpdateEvent,
                 ),
               ),

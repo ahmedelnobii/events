@@ -83,7 +83,7 @@ class AppTheme {
       titleTextStyle: TextStyle(
         fontSize: 18,
         fontWeight: .w500,
-        color: AppColors.darkBackground,
+        color: AppColors.darkMainText,
       ),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(

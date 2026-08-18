@@ -1,3 +1,4 @@
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/category_model.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/model/user_model.dart';
@@ -13,13 +14,32 @@ class HomeHeader extends StatefulWidget {
   State<HomeHeader> createState() => _HomeHeaderState();
 }
 
+//enum Labels { sport, bookclub, birthday, exhibition, meeting }
+
 class _HomeHeaderState extends State<HomeHeader> {
   int currentIndex = 0;
+  late AppLocalizations local;
+  String? titleByLabels(String label) {
+    switch (label) {
+      case 'Sport':
+        return local.sport;
+      case 'Book club':
+        return local.bookclub;
+      case 'Birthday':
+        return local.birthday;
+      case 'Exhibition':
+        return local.exhibition;
+      case 'Meeting':
+        return local.meeting;
+      default:
+        return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     UserModel user = Provider.of<UserProvider>(context).user!;
-
+    local = AppLocalizations.of(context)!;
     return SafeArea(
       child: Column(
         crossAxisAlignment: .start,
@@ -30,14 +50,11 @@ class _HomeHeaderState extends State<HomeHeader> {
               crossAxisAlignment: .start,
               children: [
                 Text(
-                  'Welcome Back ✨',
+                  '${local.welcomeback} ✨',
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
                 SizedBox(height: 4),
-                Text(
-                  user.name,
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
+                Text(user.name, style: Theme.of(context).textTheme.labelSmall),
               ],
             ),
           ),
@@ -63,13 +80,13 @@ class _HomeHeaderState extends State<HomeHeader> {
               tabs: [
                 TabItem(
                   icon: Icons.window_rounded,
-                  label: 'All',
+                  label: local.all,
                   isSelected: currentIndex == 0,
                 ),
                 ...CategoryModel.categories.map(
                   (catigory) => TabItem(
                     icon: catigory.icon,
-                    label: catigory.label,
+                    label: titleByLabels(catigory.label) ?? catigory.label,
                     isSelected:
                         currentIndex ==
                         CategoryModel.categories.indexOf(catigory) + 1,

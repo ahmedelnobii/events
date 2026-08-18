@@ -1,9 +1,11 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/theme/app_colors.dart';
 import 'package:events/core/theme/app_theme.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/model/event_model.dart';
 import 'package:events/providers/event_provider.dart';
 import 'package:events/providers/theme_provider.dart';
+import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/edit_screen.dart';
 import 'package:events/screens/widgets/firebase_servises.dart';
 import 'package:events/screens/widgets/ui_utils.dart';
@@ -22,6 +24,7 @@ class PreviewScreen extends StatelessWidget {
     var event = ModalRoute.of(context)!.settings.arguments as EventModel;
     var theme = Theme.of(context);
     bool isDark = Provider.of<ThemeProvider>(context).isDark;
+    var local = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +50,7 @@ class PreviewScreen extends StatelessWidget {
             ),
           ),
         ),
-        title: Text('Event Details', style: theme.textTheme.titleLarge),
+        title: Text(local.eventDetails, style: theme.textTheme.titleLarge),
         actions: [
           Visibility(
             child: InkWell(
@@ -83,6 +86,15 @@ class PreviewScreen extends StatelessWidget {
           Visibility(
             child: InkWell(
               onTap: () {
+                if (Provider.of<UserProvider>(
+                  context,
+                  listen: false,
+                ).user!.favEventsId.contains(event.id)) {
+                  Provider.of<UserProvider>(
+                    context,
+                    listen: false,
+                  ).removeEventFromFavorite(event.id);
+                }
                 FirebaseServices.deleteEvent(event.id)
                     .then((_) {
                       Navigator.of(context).pop();
@@ -220,7 +232,7 @@ class PreviewScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                'Description',
+                local.description,
                 style: theme.textTheme.titleMedium?.copyWith(fontWeight: .w500),
               ),
               Container(

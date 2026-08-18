@@ -4,7 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomButton extends StatelessWidget {
   VoidCallback? onPressed;
   String text;
-  CustomButton({required this.onPressed, required this.text});
+  bool isLoading;
+  CustomButton({
+    required this.onPressed,
+    required this.text,
+    this.isLoading = false,
+  });
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -15,10 +20,12 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadiusGeometry.circular(16.r),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
-      ),
+      child: isLoading
+          ? CircularProgressIndicator(color: Theme.of(context).primaryColor)
+          : Text(
+              text,
+              style: TextStyle(fontWeight: .w500, fontSize: 20.sp),
+            ),
     );
   }
 }

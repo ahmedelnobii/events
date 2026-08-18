@@ -1,6 +1,7 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
@@ -29,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var nameController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isloading = false;
+  bool isPressed = false;
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
@@ -49,7 +51,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              Text('Create your account', style: textTheme.labelLarge),
+              Text(
+                AppLocalizations.of(context)!.createYourAccount,
+                style: textTheme.labelLarge,
+              ),
               SizedBox(height: 32),
               Form(
                 autovalidateMode: .onUserInteraction,
@@ -66,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return 'must be at least 3 characters';
                         }
                       },
-                      hint: 'Enter your name',
+                      hint: AppLocalizations.of(context)!.enterYourName,
                       prefix: SvgPicture.asset(
                         AppIcons.unSelectedProfile,
                         height: 24,
@@ -90,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return 'Please enter a valid email';
                         }
                       },
-                      hint: 'Enter your email',
+                      hint: AppLocalizations.of(context)!.enterYourEmail,
                       prefix: SvgPicture.asset(
                         AppIcons.email,
                         height: 24,
@@ -110,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return 'must be at least 8 characters';
                         }
                       },
-                      hint: 'Enter your password',
+                      hint: AppLocalizations.of(context)!.enterYouPassword,
                       prefix: SvgPicture.asset(
                         AppIcons.lock,
                         height: 24,
@@ -128,11 +133,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: CustomButton(
+                    isLoading: isPressed,
                     onPressed: isloading
                         ? null
                         : () {
                             if (formKey.currentState!.validate()) {
                               isLoading(true);
+                              isPressedFunc(true);
                               FirebaseServices.register(
                                     name: nameController.text,
                                     email: emailController.text,
@@ -150,13 +157,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   })
                                   .catchError((error) {
                                     isLoading(false);
+                                    isPressedFunc(false);
                                     if (error is FirebaseAuthException) {
                                       UiUtils.showFailedMessage(error.message);
                                     }
                                   });
                             }
                           },
-                    text: 'Register',
+                    text: AppLocalizations.of(context)!.register,
                   ),
                 ),
               ),
@@ -164,7 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: .center,
                 children: [
                   Text(
-                    'Already have an account ?',
+                    AppLocalizations.of(context)!.alreadyHaveAnAccount,
                     style: textTheme.titleSmall,
                   ),
                   InkWell(
@@ -173,7 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Navigator.of(context).pop();
                     },
                     child: Text(
-                      'Log in',
+                      AppLocalizations.of(context)!.logoIn,
                       style: textTheme.titleSmall?.copyWith(
                         color: theme.primaryColor,
                         decoration: .underline,
@@ -192,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ? AppColors.darkBackground
                         : AppColors.lightBackground,
                     child: Text(
-                      '  or  ',
+                      AppLocalizations.of(context)!.or,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontSize: 24,
@@ -203,7 +211,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
 
               SizedBox(height: 48),
-              GoogleButton(text: 'Register with Google', isloading: isLoading),
+              GoogleButton(
+                text: AppLocalizations.of(context)!.registerWithGoogle,
+                isloading: isLoading,
+                isPressed: isloading,
+              ),
             ],
           ),
         ),
@@ -213,6 +225,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void isLoading(bool pressed) {
     isloading = pressed;
+    setState(() {});
+  }
+
+  void isPressedFunc(bool pressed) {
+    isPressed = pressed;
     setState(() {});
   }
 }

@@ -1,6 +1,7 @@
 import 'package:events/core/constants/app_icons.dart';
 import 'package:events/core/constants/app_images.dart';
 import 'package:events/core/theme/app_colors.dart';
+import 'package:events/l10n/app_localizations.dart';
 import 'package:events/providers/theme_provider.dart';
 import 'package:events/providers/user_provider.dart';
 import 'package:events/screens/home_screen/home_screen.dart';
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
-
+  bool isPressed = false;
   bool isLoading = false;
 
   @override
@@ -50,7 +51,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: .start,
             children: [
-              Text('Login to your account', style: textTheme.labelLarge),
+              Text(
+                AppLocalizations.of(context)!.loginToYourAccount,
+                style: textTheme.labelLarge,
+              ),
               SizedBox(height: 32),
               Form(
                 autovalidateMode: .onUserInteraction,
@@ -71,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       controller: emailController,
-                      hint: 'Enter your email',
+                      hint: AppLocalizations.of(context)!.enterYourEmail,
                       prefix: SvgPicture.asset(
                         AppIcons.email,
                         height: 24,
@@ -91,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       controller: passwordController,
-                      hint: 'Enter your password',
+                      hint: AppLocalizations.of(context)!.enterYouPassword,
                       prefix: SvgPicture.asset(
                         AppIcons.lock,
                         height: 24,
@@ -110,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   InkWell(
                     onTap: () {},
                     child: Text(
-                      'Forget Password?',
+                      AppLocalizations.of(context)!.forgetPassword,
                       style: textTheme.titleSmall?.copyWith(
                         color: theme.primaryColor,
                         decoration: .underline,
@@ -124,11 +128,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: CustomButton(
+                    isLoading: isPressed,
                     onPressed: isLoading
                         ? null
                         : () {
                             if (formKey.currentState!.validate()) {
                               isloading(true);
+                              isPressedFunc(true);
                               FirebaseServices.login(
                                     email: emailController.text,
                                     password: passwordController.text,
@@ -145,26 +151,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   })
                                   .catchError((error) {
                                     isloading(false);
+                                    isPressedFunc(false);
                                     if (error is FirebaseAuthException) {
                                       UiUtils.showFailedMessage(error.message);
                                     }
                                   });
                             }
                           },
-                    text: 'Log in',
+                    text: AppLocalizations.of(context)!.logoIn,
                   ),
                 ),
               ),
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  Text('Don’t have an account ?', style: textTheme.titleSmall),
+                  Text(
+                    AppLocalizations.of(context)!.dontHaveAnAccount,
+                    style: textTheme.titleSmall,
+                  ),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).pushNamed(RegisterScreen.routeName);
                     },
                     child: Text(
-                      'Register',
+                      AppLocalizations.of(context)!.register,
                       style: textTheme.titleSmall?.copyWith(
                         color: theme.primaryColor,
                         decoration: .underline,
@@ -183,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? AppColors.darkBackground
                         : AppColors.lightBackground,
                     child: Text(
-                      '  or  ',
+                      AppLocalizations.of(context)!.or,
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontSize: 24,
@@ -194,7 +204,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               SizedBox(height: 48),
-              GoogleButton(text: 'Login with Google', isloading: isloading),
+              GoogleButton(
+                text: AppLocalizations.of(context)!.logInWithGoogle,
+                isloading: isloading,
+                isPressed: isLoading,
+              ),
             ],
           ),
         ),
@@ -204,6 +218,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void isloading(bool pressed) {
     isLoading = pressed;
+    setState(() {});
+  }
+
+  void isPressedFunc(bool pressed) {
+    isPressed = pressed;
     setState(() {});
   }
 }
